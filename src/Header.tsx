@@ -9,8 +9,6 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalCloseButton,
-  ModalBody,
   useDisclosure,
 } from '@chakra-ui/react';
 import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
