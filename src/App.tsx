@@ -22,6 +22,7 @@ import ImportWizard from './ImportWizard';
 import Header from './Header';
 import Footer from './Footer';
 import DeepDive from './DeepDive';
+import Projects from './Projects';
 import { useNavigate, useLocation } from 'react-router-dom';
 import sample1 from './images/samples/dancer.png';
 import sample2 from './images/samples/baloons.png';
@@ -111,6 +112,18 @@ export default function App() {
       navigate('/deep-dive', { state: { pattern } });
     }
   };
+
+  if (location.pathname === '/projects') {
+    return (
+      <Box minH="100vh" minW="100vw" display="flex" flexDirection="column">
+        <Header />
+        <Box flex="1">
+          <Projects />
+        </Box>
+        <Footer />
+      </Box>
+    );
+  }
 
   if (location.pathname === '/deep-dive') {
     return (
