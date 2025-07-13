@@ -28,6 +28,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import sample1 from './images/samples/dancer.png';
 import sample2 from './images/samples/baloons.png';
 import sample3 from './images/samples/rain.png';
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../amplify/data/resource';
 
 import type { PatternDetails } from './types';
 import { saveProject } from './utils';
@@ -41,6 +43,7 @@ export default function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const location = useLocation();
+  const client = generateClient<Schema>();
 
   const handleImageUpload = (file: File | null) => {
     if (!file) return;
@@ -60,6 +63,7 @@ export default function App() {
   const handleWizardComplete = async (details: PatternDetails) => {
     if (!importImage) return;
     const data = await saveProject(importImage.src, details);
+
     setPattern(details);
     setShowGridLines(false);
     setImportImage(null);
