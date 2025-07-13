@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Box, Input, SimpleGrid, Button, Text } from '@chakra-ui/react';
+import { Box, Input, SimpleGrid, Button, Text, Flex } from '@chakra-ui/react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../amplify/data/resource';
 import { DMC_COLORS } from './ColorPalette';
-import UsedColors from './UsedColors';
 
 const client = generateClient<Schema>();
 
@@ -16,7 +15,8 @@ interface FlossRecord {
 export default function FlossBox() {
   const { user } = useAuthenticator(ctx => [ctx.user]);
   const [floss, setFloss] = useState<FlossRecord[]>([]);
-  const [search, setSearch] = useState('');
+  const [searchMine, setSearchMine] = useState('');
+  const [searchAll, setSearchAll] = useState('');
 
   const fetchFloss = async () => {
     const { data } = await client.models.Floss.list();
@@ -45,56 +45,72 @@ export default function FlossBox() {
   }
 
   const ownedSet = new Set(floss.map(f => f.code));
-  const ownedHexes = floss
-    .map(f => DMC_COLORS.find(c => c.code === f.code)?.hex)
-    .filter((h): h is string => !!h);
+  const ownedColors = DMC_COLORS.filter(c => ownedSet.has(c.code));
+  const availableColors = DMC_COLORS.filter(c => !ownedSet.has(c.code));
 
-  const filtered = DMC_COLORS.filter(c =>
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    c.code.includes(search)
+  const filteredOwned = ownedColors.filter(c =>
+    c.name.toLowerCase().includes(searchMine.toLowerCase()) ||
+    c.code.includes(searchMine)
+  );
+
+  const filteredAvail = availableColors.filter(c =>
+    c.name.toLowerCase().includes(searchAll.toLowerCase()) ||
+    c.code.includes(searchAll)
   );
 
   return (
     <Box p={4}>
-      <Box mb={4}>
-        <Text fontWeight="bold" mb={2}>My Floss Box</Text>
-        <UsedColors
-          colors={ownedHexes}
-          onColorClick={hex => {
-            const dmc = DMC_COLORS.find(c => c.hex.toLowerCase() === hex.toLowerCase());
-            if (dmc) removeColor(dmc.code);
-          }}
-        />
-      </Box>
-      <Input
-        placeholder="Search by name or code"
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        mb={4}
-      />
-      <SimpleGrid columns={{ base: 2, md: 4, lg: 6 }} spacing={4}>
-        {filtered.map(c => (
-          <Box key={c.code} textAlign="center">
-            <Box
-              w="24px"
-              h="24px"
-              bg={c.hex}
-              border="1px solid #ccc"
-              borderRadius="md"
-              m="0 auto"
-            />
-            <Text mt={1}>{c.code}</Text>
-            <Button
-              size="xs"
-              mt={1}
-              onClick={() =>
-                ownedSet.has(c.code) ? removeColor(c.code) : addColor(c.code)
-              }
-            >
-              {ownedSet.has(c.code) ? 'Remove' : 'Add'}
-            </Button>
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} alignItems="flex-start">
+        <Box>
+          <Text fontWeight="bold" mb={2}>My Floss</Text>
+          <Input
+            placeholder="Search by name or code"
+            value={searchMine}
+            onChange={e => setSearchMine(e.target.value)}
+            mb={2}
+          />
+          <Box maxH="70vh" overflowY="auto">
+            {filteredOwned.map(c => (
+              <Flex key={c.code} align="center" mb={1}>
+                <Box
+                  w="24px"
+                  h="24px"
+                  bg={c.hex}
+                  border="1px solid #ccc"
+                  borderRadius="md"
+                  mr={2}
+                />
+                <Text flex="1">{c.code} - {c.name}</Text>
+                <Button size="xs" onClick={() => removeColor(c.code)}>Remove</Button>
+              </Flex>
+            ))}
           </Box>
-        ))}
+        </Box>
+        <Box>
+          <Text fontWeight="bold" mb={2}>DMC Colors</Text>
+          <Input
+            placeholder="Search by name or code"
+            value={searchAll}
+            onChange={e => setSearchAll(e.target.value)}
+            mb={2}
+          />
+          <Box maxH="70vh" overflowY="auto">
+            {filteredAvail.map(c => (
+              <Flex key={c.code} align="center" mb={1}>
+                <Box
+                  w="24px"
+                  h="24px"
+                  bg={c.hex}
+                  border="1px solid #ccc"
+                  borderRadius="md"
+                  mr={2}
+                />
+                <Text flex="1">{c.code} - {c.name}</Text>
+                <Button size="xs" onClick={() => addColor(c.code)}>Add</Button>
+              </Flex>
+            ))}
+          </Box>
+        </Box>
       </SimpleGrid>
     </Box>
   );
