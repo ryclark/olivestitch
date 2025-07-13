@@ -28,6 +28,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import sample1 from './images/samples/dancer.png';
 import sample2 from './images/samples/baloons.png';
 import sample3 from './images/samples/rain.png';
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../amplify/data/resource';
 
 export interface PatternDetails {
   grid: string[][];
@@ -47,6 +49,7 @@ export default function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const location = useLocation();
+  const client = generateClient<Schema>();
 
   const handleImageUpload = (file: File | null) => {
     if (!file) return;
@@ -63,11 +66,22 @@ export default function App() {
     setShowImageOptions(false);
   };
 
-  const handleWizardComplete = (details: PatternDetails) => {
+  const handleWizardComplete = async (details: PatternDetails) => {
+    if (!importImage) return;
+    const { data } = await client.models.Project.create({
+      image: importImage.src,
+      pattern: JSON.stringify(details),
+      progress: [],
+    });
     setPattern(details);
     setShowGridLines(false);
     setImportImage(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
+    if (data) {
+      navigate('/deep-dive', {
+        state: { pattern: details, progress: [], id: data.id },
+      });
+    }
   };
 
   const handleWizardCancel = () => {
