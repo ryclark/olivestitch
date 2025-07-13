@@ -41,14 +41,24 @@ export default function Header() {
         </Heading>
         <Spacer />
         {user && (
-          <Button
-            colorScheme="teal"
-            size="sm"
-            mr={2}
-            onClick={() => navigate('/projects')}
-          >
-            My Projects
-          </Button>
+          <>
+            <Button
+              colorScheme="teal"
+              size="sm"
+              mr={2}
+              onClick={() => navigate('/projects')}
+            >
+              My Projects
+            </Button>
+            <Button
+              colorScheme="teal"
+              size="sm"
+              mr={2}
+              onClick={() => navigate('/floss-box')}
+            >
+              Floss Box
+            </Button>
+          </>
         )}
         <Button colorScheme="teal" size="sm" onClick={user ? signOut : onOpen}>
           {user ? 'Logout' : 'Join or Sign in'}
