@@ -1,5 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react';
 import { Flex, Box, Text } from '@chakra-ui/react';
 
 export const DMC_COLORS = [

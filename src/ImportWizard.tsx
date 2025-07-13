@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import {
   Box,
   Button,
@@ -25,7 +25,8 @@ import {
   StepTitle,
   StepDescription,
   StepSeparator,
-  Text
+  Text,
+  type ChakraProps
 } from '@chakra-ui/react';
 
 const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
@@ -121,26 +122,41 @@ export default function ImportWizard({
     setOffset({ x, y });
   }, [img.width, img.height, cropWidth, cropHeight]);
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    dragRef.current = { x: e.clientX, y: e.clientY, start: offset };
-    window.addEventListener('mousemove', handleMouseMove);
+  const handleDrag = useCallback(
+    (clientX: number, clientY: number) => {
+      if (!dragRef.current) return;
+      const dx = clientX - dragRef.current.x;
+      const dy = clientY - dragRef.current.y;
+      updateOffset(
+        dragRef.current.start.x + dx,
+        dragRef.current.start.y + dy,
+        scale
+      );
+    },
+    [updateOffset, scale]
+  );
+
+  const handleMouseMoveWindow = useCallback((e: MouseEvent) => {
+    handleDrag(e.clientX, e.clientY);
+  }, [handleDrag]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    handleDrag(e.clientX, e.clientY);
   };
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!dragRef.current) return;
-    const dx = e.clientX - dragRef.current.x;
-    const dy = e.clientY - dragRef.current.y;
-    updateOffset(dragRef.current.start.x + dx, dragRef.current.start.y + dy, scale);
-  }, [updateOffset, scale]);
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    dragRef.current = { x: e.clientX, y: e.clientY, start: offset };
+    window.addEventListener('mousemove', handleMouseMoveWindow);
+  };
 
   useEffect(() => {
     const handleUp = () => {
       dragRef.current = null;
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-    window.addEventListener('mouseup', handleUp);
-    return () => window.removeEventListener('mouseup', handleUp);
-  }, [handleMouseMove]);
+        window.removeEventListener('mousemove', handleMouseMoveWindow);
+      };
+      window.addEventListener('mouseup', handleUp);
+      return () => window.removeEventListener('mouseup', handleUp);
+    }, [handleMouseMoveWindow]);
 
   useEffect(() => {
     const prev = scaleRef.current;
@@ -157,6 +173,7 @@ export default function ImportWizard({
     canvas.width = gridWidth;
     canvas.height = gridHeight;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return [];
     const srcX = Math.max(0, -offset.x / scale);
     const srcY = Math.max(0, -offset.y / scale);
     const srcW = cropWidth / scale;
@@ -196,7 +213,7 @@ export default function ImportWizard({
 
   const handleFinish = () => {
     onComplete({
-      grid: preview,
+      grid: preview!,
       fabricCount,
       widthIn,
       heightIn,
@@ -207,7 +224,7 @@ export default function ImportWizard({
 
   const handleReduceChange = (val: number) => {
     setReduceTo(val);
-    setPreview(reduceColors(grid, val));
+    setPreview(grid ? reduceColors(grid, val) : null);
   };
 
   const steps = [
@@ -218,7 +235,7 @@ export default function ImportWizard({
     { title: 'Done', description: 'Finish' }
   ];
 
-  const overlayProps = {
+  const overlayProps: ChakraProps = {
     position: 'fixed',
     top: 0,
     left: 0,
@@ -461,7 +478,7 @@ export default function ImportWizard({
         {step === 3 && (
           <Box>
             <Grid
-              grid={preview}
+              grid={preview || []}
               setGrid={() => {}}
               selectedColor={null}
               showGrid={false}

@@ -84,6 +84,7 @@ export function exportGridAsPng(grid: string[][], cellSize: number, showGrid: bo
   canvas.width = cols * cellSize;
   canvas.height = rows * cellSize;
   const ctx = canvas.getContext('2d');
+  if (!ctx) return '';
 
   // Draw cells
   for (let y = 0; y < rows; y++) {

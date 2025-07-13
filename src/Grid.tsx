@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box } from '@chakra-ui/react';
 import { DMC_COLORS } from './ColorPalette';
 import { overlayShade } from './utils';
@@ -28,9 +27,9 @@ export default function Grid({
   selectedColor,
   showGrid,
   maxGridPx = 400,
-  activeCell = null,
-  activeColor = null,
-  onCellClick = null,
+    activeCell = null,
+    activeColor = null,
+    onCellClick,
   markComplete = false,
   completedCells = null
 }: GridProps) {
@@ -58,7 +57,6 @@ export default function Grid({
       gridTemplateRows={`repeat(${rows}, ${cellSize}px)`}
       gridTemplateColumns={`repeat(${cols}, ${cellSize}px)`}
       border="2px solid #444"
-      boxSizing="border-box"
       boxSizing="border-box"
       w={cellSize * cols + BORDER}
       h={cellSize * rows + BORDER}

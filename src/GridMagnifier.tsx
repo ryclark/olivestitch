@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Box } from '@chakra-ui/react';
 import Grid from './Grid';
 
@@ -26,7 +26,7 @@ export default function GridMagnifier({
 
   const handleLeave = () => setPos(null);
 
-  const lensStyle = pos
+  const lensStyle: React.CSSProperties = pos
     ? {
         position: 'absolute',
         pointerEvents: 'none',
