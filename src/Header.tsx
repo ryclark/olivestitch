@@ -1,14 +1,34 @@
-import { Box, Flex, Heading, Spacer, Button, Image } from '@chakra-ui/react';
-import logo from './images/logo.webp'; // adjust the path if the file is in public/
-
-// ...
-
+import { useEffect } from 'react';
+import {
+  Box,
+  Flex,
+  Heading,
+  Spacer,
+  Button,
+  Image,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalCloseButton,
+  ModalBody,
+  useDisclosure,
+} from '@chakra-ui/react';
+import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import logo from './images/logo.webp';
 
 
 export default function Header() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user, signOut } = useAuthenticator((ctx) => [ctx.user]);
+  useEffect(() => {
+    if (user) {
+      onClose();
+    }
+  }, [user, onClose]);
+
   return (
     <Box as="header" position="sticky" width="100%" top="0" zIndex="docked" bg="teal.800" boxShadow="sm">
-      <Flex align="center"  minW="960px" width="100%" maxW="960px" mx="auto" p={2}>
+      <Flex align="center" minW="960px" width="100%" maxW="960px" mx="auto" p={2}>
         <Image src={logo} alt="SnapStitch logo" boxSize="50px" borderRadius="md" mr={3} />
         <Heading
           size="2xl"
@@ -20,8 +40,19 @@ export default function Header() {
           Olive Stitch
         </Heading>
         <Spacer />
-        <Button colorScheme="teal" size="sm">Join or Sign in</Button>
+        <Button colorScheme="teal" size="sm" onClick={user ? signOut : onOpen}>
+          {user ? 'Logout' : 'Join or Sign in'}
+        </Button>
       </Flex>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody p={4}>
+            <Authenticator />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
