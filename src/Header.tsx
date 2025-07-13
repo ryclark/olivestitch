@@ -47,10 +47,7 @@ export default function Header() {
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalCloseButton />
-          <ModalBody p={4}>
             <Authenticator />
-          </ModalBody>
         </ModalContent>
       </Modal>
     </Box>
