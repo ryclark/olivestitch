@@ -43,7 +43,6 @@ export default function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const location = useLocation();
-  const client = generateClient<Schema>();
 
   const handleImageUpload = (file: File | null) => {
     if (!file) return;
