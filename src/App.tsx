@@ -31,14 +31,8 @@ import sample3 from './images/samples/rain.png';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../amplify/data/resource';
 
-export interface PatternDetails {
-  grid: string[][];
-  fabricCount: number;
-  widthIn: number;
-  heightIn: number;
-  colors: string[];
-  colorUsage: Record<string, number>;
-}
+import type { PatternDetails } from './types';
+import { saveProject } from './utils';
 
 export default function App() {
   const [importImage, setImportImage] = useState<HTMLImageElement | null>(null);
@@ -68,11 +62,8 @@ export default function App() {
 
   const handleWizardComplete = async (details: PatternDetails) => {
     if (!importImage) return;
-    const { data } = await client.models.Project.create({
-      image: importImage.src,
-      pattern: JSON.stringify(details),
-      progress: [],
-    });
+    const data = await saveProject(importImage.src, details);
+
     setPattern(details);
     setShowGridLines(false);
     setImportImage(null);

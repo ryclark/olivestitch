@@ -1,4 +1,9 @@
 import { DMC_COLORS } from './ColorPalette';
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../amplify/data/resource';
+import type { PatternDetails } from './types';
+
+const client = generateClient<Schema>();
 
 // Convert hex to RGB array
 export function hexToRgb(hex: string): [number, number, number] {
@@ -136,4 +141,16 @@ export function overlayShade(hex: string): string {
   const brightness = (r * 299 + g * 587 + b * 114) / 255000;
   // If the color is bright, darken the shade, else lighten it
   return shadeColor(hex, brightness > 0.6 ? -0.4 : 0.4);
+}
+
+export async function saveProject(
+  image: string,
+  pattern: PatternDetails
+) {
+  const { data } = await client.models.Project.create({
+    image,
+    pattern: JSON.stringify(pattern),
+    progress: [],
+  });
+  return data;
 }
