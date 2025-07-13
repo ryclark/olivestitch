@@ -29,14 +29,8 @@ import sample1 from './images/samples/dancer.png';
 import sample2 from './images/samples/baloons.png';
 import sample3 from './images/samples/rain.png';
 
-export interface PatternDetails {
-  grid: string[][];
-  fabricCount: number;
-  widthIn: number;
-  heightIn: number;
-  colors: string[];
-  colorUsage: Record<string, number>;
-}
+import type { PatternDetails } from './types';
+import { saveProject } from './utils';
 
 export default function App() {
   const [importImage, setImportImage] = useState<HTMLImageElement | null>(null);
@@ -63,11 +57,18 @@ export default function App() {
     setShowImageOptions(false);
   };
 
-  const handleWizardComplete = (details: PatternDetails) => {
+  const handleWizardComplete = async (details: PatternDetails) => {
+    if (!importImage) return;
+    const data = await saveProject(importImage.src, details);
     setPattern(details);
     setShowGridLines(false);
     setImportImage(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
+    if (data) {
+      navigate('/deep-dive', {
+        state: { pattern: details, progress: [], id: data.id },
+      });
+    }
   };
 
   const handleWizardCancel = () => {

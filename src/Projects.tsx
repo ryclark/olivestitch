@@ -5,7 +5,8 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../amplify/data/resource';
 import ImportWizard from './ImportWizard';
-import { PatternDetails } from './App';
+import type { PatternDetails } from './types';
+import { saveProject } from './utils';
 
 const client = generateClient<Schema>();
 
@@ -50,11 +51,7 @@ export default function Projects() {
 
   const handleWizardComplete = async (details: PatternDetails) => {
     if (!importImage) return;
-    const { data } = await client.models.Project.create({
-      image: importImage.src,
-      pattern: JSON.stringify(details),
-      progress: [],
-    });
+    const data = await saveProject(importImage.src, details);
     await fetchProjects();
     setImportImage(null);
     if (fileInputRef.current) fileInputRef.current.value = '';

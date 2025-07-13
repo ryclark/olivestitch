@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../amplify/data/resource';
 import Grid from './Grid';
-import { PatternDetails } from './App';
+import type { PatternDetails } from './types';
 
 const client = generateClient<Schema>();
 
