@@ -18,7 +18,7 @@ import logo from './images/logo.webp';
 
 export default function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user, signOut } = useAuthenticator((ctx) => [ctx.user]);
+  const { user, signOut } = useAuthenticator(ctx => [ctx.user]);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -45,6 +45,16 @@ export default function Header() {
           Olive Stitch
         </Heading>
         <Spacer />
+        {user && (
+          <Button
+            colorScheme="teal"
+            size="sm"
+            mr={2}
+            onClick={() => navigate('/projects')}
+          >
+            My Projects
+          </Button>
+        )}
         <Button colorScheme="teal" size="sm" onClick={user ? handleLogout : onOpen}>
           {user ? 'Logout' : 'Join or Sign in'}
         </Button>
