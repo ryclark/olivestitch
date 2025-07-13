@@ -15,7 +15,6 @@ import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
 import { useNavigate } from 'react-router-dom';
 import logo from './images/logo.webp';
 
-
 export default function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user, signOut } = useAuthenticator(ctx => [ctx.user]);
@@ -25,6 +24,7 @@ export default function Header() {
     await signOut();
     navigate('/');
   };
+
   useEffect(() => {
     if (user) {
       onClose();
@@ -46,14 +46,24 @@ export default function Header() {
         </Heading>
         <Spacer />
         {user && (
-          <Button
-            colorScheme="teal"
-            size="sm"
-            mr={2}
-            onClick={() => navigate('/projects')}
-          >
-            My Projects
-          </Button>
+          <>
+            <Button
+              colorScheme="teal"
+              size="sm"
+              mr={2}
+              onClick={() => navigate('/projects')}
+            >
+              My Projects
+            </Button>
+            <Button
+              colorScheme="teal"
+              size="sm"
+              mr={2}
+              onClick={() => navigate('/floss-box')}
+            >
+              Floss Box
+            </Button>
+          </>
         )}
         <Button colorScheme="teal" size="sm" onClick={user ? handleLogout : onOpen}>
           {user ? 'Logout' : 'Join or Sign in'}
@@ -62,7 +72,7 @@ export default function Header() {
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-            <Authenticator />
+          <Authenticator />
         </ModalContent>
       </Modal>
     </Box>
