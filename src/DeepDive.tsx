@@ -4,13 +4,18 @@ import UsedColors from './UsedColors';
 import { getColorUsage } from './utils';
 import { DMC_COLORS } from './ColorPalette';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../amplify/data/resource';
 import Grid from './Grid';
 import { PatternDetails } from './App';
+
+const client = generateClient<Schema>();
 
 export default function DeepDive() {
   const location = useLocation();
   const navigate = useNavigate();
-  const pattern = (location.state as { pattern?: PatternDetails } | undefined)?.pattern;
+  const { pattern, progress, id } =
+    (location.state as { pattern?: PatternDetails; progress?: string[]; id?: string } | undefined) || {};
 
   const [hover, setHover] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
   const [selected, setSelected] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
@@ -18,7 +23,9 @@ export default function DeepDive() {
   const [focusedColor, setFocusedColor] = useState<string | null>(null);
   const [sectionComplete, setSectionComplete] = useState<boolean>(false);
   const [completedCells, setCompletedCells] = useState<Set<string>>(new Set());
-  const [completedSections, setCompletedSections] = useState<Set<string>>(new Set());
+  const [completedSections, setCompletedSections] = useState<Set<string>>(
+    new Set(progress || [])
+  );
 
   const grid = useMemo(() => pattern?.grid ?? [], [pattern]);
   const fabricCount = pattern?.fabricCount ?? 14;
@@ -112,6 +119,11 @@ export default function DeepDive() {
       setSectionComplete(false);
     }
   }, [active, completedCells, completedSections, pattern, selected, getSectionKeys]);
+
+  useEffect(() => {
+    if (!id) return;
+    client.models.Project.update({ id, progress: Array.from(completedSections) });
+  }, [completedSections, id]);
 
   const subGrid = active
       ? grid
