@@ -23,6 +23,7 @@ import Header from './Header';
 import Footer from './Footer';
 import DeepDive from './DeepDive';
 import Projects from './Projects';
+import FlossBox from './FlossBox';
 import { useNavigate, useLocation } from 'react-router-dom';
 import sample1 from './images/samples/dancer.png';
 import sample2 from './images/samples/baloons.png';
@@ -119,6 +120,18 @@ export default function App() {
         <Header />
         <Box flex="1">
           <Projects />
+        </Box>
+        <Footer />
+      </Box>
+    );
+  }
+
+  if (location.pathname === '/floss-box') {
+    return (
+      <Box minH="100vh" minW="100vw" display="flex" flexDirection="column">
+        <Header />
+        <Box flex="1">
+          <FlossBox />
         </Box>
         <Footer />
       </Box>

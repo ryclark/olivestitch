@@ -14,6 +14,11 @@ const schema = a.schema({
       progress: a.string().array(),
     })
     .authorization(allow => [allow.owner()]),
+  Floss: a
+    .model({
+      code: a.string(),
+    })
+    .authorization(allow => [allow.owner()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
