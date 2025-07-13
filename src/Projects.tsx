@@ -50,7 +50,7 @@ export default function Projects() {
 
   const handleWizardComplete = async (details: PatternDetails) => {
     if (!importImage) return;
-    await client.models.Project.create({
+    const { data } = await client.models.Project.create({
       image: importImage.src,
       pattern: JSON.stringify(details),
       progress: [],
@@ -58,6 +58,11 @@ export default function Projects() {
     await fetchProjects();
     setImportImage(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
+    if (data) {
+      navigate('/deep-dive', {
+        state: { pattern: details, progress: [], id: data.id },
+      });
+    }
   };
 
   const handleWizardCancel = () => {
