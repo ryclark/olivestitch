@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Box, Flex, Button } from '@chakra-ui/react';
 import UsedColors from './UsedColors';
 import { getColorUsage } from './utils';
@@ -20,8 +20,8 @@ export default function DeepDive() {
   const [completedCells, setCompletedCells] = useState<Set<string>>(new Set());
   const [completedSections, setCompletedSections] = useState<Set<string>>(new Set());
 
-
-  const { grid, fabricCount } = pattern;
+  const grid = useMemo(() => pattern?.grid ?? [], [pattern]);
+  const fabricCount = pattern?.fabricCount ?? 14;
   const maxGridPx = 500;
   const rows = grid.length;
   const cols = grid[0]?.length || 0;
@@ -114,10 +114,12 @@ export default function DeepDive() {
   }, [active, completedCells, completedSections, pattern, selected, getSectionKeys]);
 
   const subGrid = active
-    ? grid
-        .slice(active.y * fabricCount, active.y * fabricCount + fabricCount)
-        .map(row => row.slice(active.x * fabricCount, active.x * fabricCount + fabricCount))
-    : null;
+      ? grid
+          .slice(active.y * fabricCount, active.y * fabricCount + fabricCount)
+          .map((row: string[]) =>
+            row.slice(active.x * fabricCount, active.x * fabricCount + fabricCount)
+          )
+      : null;
 
   const colorUsage = subGrid ? getColorUsage(subGrid) : {};
   const completedUsage = useMemo(() => {
@@ -169,19 +171,19 @@ export default function DeepDive() {
         </Box>
         {active && (
           <Box>
-          <Grid
-            grid={subGrid}
-            setGrid={() => {}}
-            selectedColor={null}
+            <Grid
+              grid={subGrid || []}
+              setGrid={() => {}}
+              selectedColor={null}
             showGrid={true}
             maxGridPx={subMaxPx}
             activeCell={focusedCell}
             activeColor={focusedColor}
             markComplete={sectionComplete}
-            onCellClick={(y, x, color) => {
-              setFocusedCell(null);
-              setFocusedColor(prev => (prev === color ? prev : color));
-            }}
+              onCellClick={(_, __, color) => {
+                setFocusedCell(null);
+                setFocusedColor(prev => (prev === color ? prev : color));
+              }}
           />
             <Box mt={2} width={`${subGridWidth}px`}>
               <UsedColors
@@ -193,12 +195,14 @@ export default function DeepDive() {
                   setFocusedColor(prev => (prev === color ? prev : color));
                 }}
               />
-              <Button
-                mt={2}
-                colorScheme="teal"
-                onClick={() => {
-                  const keys = getSectionKeys(selected);
-                  const sectionKey = `${selected.y}-${selected.x}`;
+              {selected && (
+                <Button
+                  mt={2}
+                  colorScheme="teal"
+                  onClick={() => {
+                    if (!selected) return;
+                    const keys = getSectionKeys(selected);
+                    const sectionKey = `${selected.y}-${selected.x}`;
                   setCompletedCells(prev => {
                     const next = new Set(prev);
                     if (sectionComplete) {
@@ -215,10 +219,11 @@ export default function DeepDive() {
                     return next;
                   });
                   setSectionComplete(prev => !prev);
-                }}
-              >
-                {sectionComplete ? 'Revisit Section' : 'Section Complete'}
-              </Button>
+                  }}
+                >
+                  {sectionComplete ? 'Revisit Section' : 'Section Complete'}
+                </Button>
+              )}
               {focusedColor && (
                 <Box mt={3} textAlign="center">
                   {(() => {

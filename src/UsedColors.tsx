@@ -1,4 +1,3 @@
-import React from 'react';
 import { Flex, Box, Text, Tooltip } from '@chakra-ui/react';
 import { DMC_COLORS } from './ColorPalette';
 

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import {
   Box,
   Button,
@@ -52,7 +52,10 @@ export default function App() {
     const reader = new FileReader();
     reader.onload = evt => {
       img.onload = () => setImportImage(img);
-      img.src = evt.target.result;
+      const result = evt.target?.result;
+      if (typeof result === 'string') {
+        img.src = result;
+      }
     };
     reader.readAsDataURL(file);
     setShowImageOptions(false);
@@ -77,8 +80,9 @@ export default function App() {
       const canvas = document.createElement('canvas');
       canvas.width = size;
       canvas.height = size;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.drawImage(
         img,
         (img.width - size) / 2,
         (img.height - size) / 2,
@@ -137,7 +141,7 @@ export default function App() {
               accept="image/*"
               display="none"
               ref={fileInputRef}
-              onChange={e => handleImageUpload(e.target.files[0])}
+              onChange={e => handleImageUpload(e.target.files ? e.target.files[0] : null)}
             />
             <Button
               size="lg"
@@ -259,7 +263,7 @@ export default function App() {
               <Box mb={4}>
                 {(() => {
                   const stitches = pattern.grid.length * (pattern.grid[0]?.length || 0);
-                  const fmt = (min, max) => {
+                  const fmt = (min: number, max: number) => {
                     const minHrs = (stitches / max).toFixed(1);
                     const maxHrs = (stitches / min).toFixed(1);
                     return `${minHrs}-${maxHrs}`;
