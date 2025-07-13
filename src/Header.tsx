@@ -12,12 +12,19 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import { useNavigate } from 'react-router-dom';
 import logo from './images/logo.webp';
 
 
 export default function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user, signOut } = useAuthenticator((ctx) => [ctx.user]);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/');
+  };
   useEffect(() => {
     if (user) {
       onClose();
@@ -38,7 +45,7 @@ export default function Header() {
           Olive Stitch
         </Heading>
         <Spacer />
-        <Button colorScheme="teal" size="sm" onClick={user ? signOut : onOpen}>
+        <Button colorScheme="teal" size="sm" onClick={user ? handleLogout : onOpen}>
           {user ? 'Logout' : 'Join or Sign in'}
         </Button>
       </Flex>
