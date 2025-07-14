@@ -31,7 +31,11 @@ export default function Projects() {
     const records = await Promise.all(
       (data as ProjectRecord[]).map(async p => {
         if (p.image) {
+<<<<<<< ours
           const { url } = await getUrl({ key: p.image, options: { accessLevel: 'private' } });
+=======
+          const { url } = await getUrl({ path: p.image });
+>>>>>>> theirs
           return { ...p, image: url.href };
         }
         return p;

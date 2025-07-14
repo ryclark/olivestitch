@@ -158,6 +158,7 @@ export async function saveProject(
   pattern: PatternDetails
 ) {
   const blob = image instanceof File ? image : dataUrlToBlob(image);
+<<<<<<< ours
   const key = `customer-images/{entity_id}/${crypto.randomUUID()}.png`;
   const upload = await uploadData({
     key,
@@ -167,6 +168,17 @@ export async function saveProject(
   const result = await upload.result;
   const { data } = await client.models.Project.create({
     image: result.key,
+=======
+  const filename = `${crypto.randomUUID()}.png`;
+  const upload = await uploadData({
+    path: ({ identityId }) => `customer-images/${identityId}/${filename}`,
+    data: blob,
+    options: { contentType: 'image/png' }
+  });
+  const result = await upload.result;
+  const { data } = await client.models.Project.create({
+    image: result.path,
+>>>>>>> theirs
     pattern: JSON.stringify(pattern),
     progress: [],
   });

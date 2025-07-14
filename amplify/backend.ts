@@ -6,5 +6,9 @@ import { storage } from './storage/resource';
 defineBackend({
   auth,
   data,
+<<<<<<< ours
   storage
+=======
+  storage,
+>>>>>>> theirs
 });
