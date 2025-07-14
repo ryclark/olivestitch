@@ -148,7 +148,7 @@ export async function saveProject(
   pattern: PatternDetails
 ) {
   const { data } = await client.models.Project.create({
-    image,
+    /*image,*/
     pattern: JSON.stringify(pattern),
     progress: [],
   });
