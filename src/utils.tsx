@@ -1,5 +1,6 @@
 import { DMC_COLORS } from './ColorPalette';
 import { generateClient } from 'aws-amplify/data';
+import { uploadData } from '@aws-amplify/storage';
 import type { Schema } from '../amplify/data/resource';
 import type { PatternDetails } from './types';
 
@@ -143,12 +144,29 @@ export function overlayShade(hex: string): string {
   return shadeColor(hex, brightness > 0.6 ? -0.4 : 0.4);
 }
 
+function dataUrlToBlob(dataUrl: string): Blob {
+  const parts = dataUrl.split(',');
+  const mime = parts[0]?.match(/:(.*?);/)?.[1] || 'image/png';
+  const bytes = atob(parts[1]);
+  const arr = new Uint8Array(bytes.length);
+  for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+  return new Blob([arr], { type: mime });
+}
+
 export async function saveProject(
-  image: string,
+  image: string | File,
   pattern: PatternDetails
 ) {
+  const blob = image instanceof File ? image : dataUrlToBlob(image);
+  const key = `customer-images/{entity_id}/${crypto.randomUUID()}.png`;
+  const upload = await uploadData({
+    key,
+    data: blob,
+    options: { contentType: 'image/png', accessLevel: 'private' }
+  });
+  const result = await upload.result;
   const { data } = await client.models.Project.create({
-    /*image,*/
+    image: result.key,
     pattern: JSON.stringify(pattern),
     progress: [],
   });

@@ -3,6 +3,7 @@ import { Box, Button, Image, Input, SimpleGrid, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/data';
+import { getUrl } from '@aws-amplify/storage';
 import type { Schema } from '../amplify/data/resource';
 import ImportWizard from './ImportWizard';
 import type { PatternDetails } from './types';
@@ -22,11 +23,21 @@ export default function Projects() {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<ProjectRecord[]>([]);
   const [importImage, setImportImage] = useState<HTMLImageElement | null>(null);
+  const [importFile, setImportFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const fetchProjects = async () => {
     const { data } = await client.models.Project.list();
-    setProjects(data as ProjectRecord[]);
+    const records = await Promise.all(
+      (data as ProjectRecord[]).map(async p => {
+        if (p.image) {
+          const { url } = await getUrl({ key: p.image, options: { accessLevel: 'private' } });
+          return { ...p, image: url.href };
+        }
+        return p;
+      })
+    );
+    setProjects(records);
   };
 
   useEffect(() => {
@@ -47,13 +58,15 @@ export default function Projects() {
       }
     };
     reader.readAsDataURL(file);
+    setImportFile(file);
   };
 
   const handleWizardComplete = async (details: PatternDetails) => {
     if (!importImage) return;
-    const data = await saveProject(importImage.src, details);
+    const data = await saveProject(importFile ?? importImage.src, details);
     await fetchProjects();
     setImportImage(null);
+    setImportFile(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
     if (data) {
       navigate('/deep-dive', {
@@ -64,6 +77,7 @@ export default function Projects() {
 
   const handleWizardCancel = () => {
     setImportImage(null);
+    setImportFile(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
