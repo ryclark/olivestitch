@@ -28,8 +28,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import sample1 from './images/samples/dancer.png';
 import sample2 from './images/samples/baloons.png';
 import sample3 from './images/samples/rain.png';
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../amplify/data/resource';
 
 import type { PatternDetails } from './types';
 import { saveProject } from './utils';
