@@ -34,6 +34,7 @@ import { saveProject } from './utils';
 
 export default function App() {
   const [importImage, setImportImage] = useState<HTMLImageElement | null>(null);
+  const [importFile, setImportFile] = useState<File | null>(null);
   const [showImageOptions, setShowImageOptions] = useState<boolean>(false);
   const [pattern, setPattern] = useState<PatternDetails | null>(null);
   const [showGridLines, setShowGridLines] = useState<boolean>(false);
@@ -54,16 +55,18 @@ export default function App() {
       }
     };
     reader.readAsDataURL(file);
+    setImportFile(file);
     setShowImageOptions(false);
   };
 
   const handleWizardComplete = async (details: PatternDetails) => {
     if (!importImage) return;
-    const data = await saveProject(importImage.src, details);
+    const data = await saveProject(importFile ?? importImage.src, details);
 
     setPattern(details);
     setShowGridLines(false);
     setImportImage(null);
+    setImportFile(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
     if (data) {
       navigate('/deep-dive', {
@@ -74,6 +77,7 @@ export default function App() {
 
   const handleWizardCancel = () => {
     setImportImage(null);
+    setImportFile(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
