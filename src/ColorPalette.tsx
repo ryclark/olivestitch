@@ -461,12 +461,13 @@ export const DMC_COLORS = [
 export interface ColorPaletteProps {
   selected: string | null;
   setSelected: (hex: string) => void;
+  colors?: typeof DMC_COLORS;
 }
 
-export default function ColorPalette({ selected, setSelected }: ColorPaletteProps) {
+export default function ColorPalette({ selected, setSelected, colors = DMC_COLORS }: ColorPaletteProps) {
   return (
     <Flex wrap="wrap" gap={2} my={2} justify="center">
-      {DMC_COLORS.map(c => (
+      {colors.map(c => (
         <Box key={c.code} textAlign="center" fontSize="11px">
           <Box
             onClick={() => setSelected(c.hex)}
