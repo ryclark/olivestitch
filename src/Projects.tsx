@@ -31,7 +31,8 @@ export default function Projects() {
     const records = await Promise.all(
       (data as ProjectRecord[]).map(async p => {
         if (p.image) {
-          const { url } = await getUrl({ key: p.image, options: { accessLevel: 'private' } });
+          // Images are stored in identity-scoped paths, so the default access level is sufficient
+          const { url } = await getUrl({ key: p.image });
           return { ...p, image: url.href };
         }
         return p;

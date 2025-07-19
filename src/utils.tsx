@@ -1,6 +1,7 @@
 import { DMC_COLORS } from './ColorPalette';
 import { generateClient } from 'aws-amplify/data';
 import { uploadData } from '@aws-amplify/storage';
+import { fetchAuthSession } from 'aws-amplify/auth';
 import type { Schema } from '../amplify/data/resource';
 import type { PatternDetails } from './types';
 
@@ -158,11 +159,13 @@ export async function saveProject(
   pattern: PatternDetails
 ) {
   const blob = image instanceof File ? image : dataUrlToBlob(image);
-  const key = `customer-images/{entity_id}/${crypto.randomUUID()}.png`;
+  // Fetch the current Cognito identity to scope uploaded images per user
+  const { identityId } = await fetchAuthSession();
+  const key = `customer-images/${identityId}/${crypto.randomUUID()}.png`;
   const upload = await uploadData({
     key,
     data: blob,
-    options: { contentType: 'image/png', accessLevel: 'private' }
+    options: { contentType: 'image/png' }
   });
   const result = await upload.result;
   const { data } = await client.models.Project.create({
