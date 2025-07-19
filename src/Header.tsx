@@ -32,7 +32,7 @@ export default function Header() {
         <Image src={logo} alt="SnapStitch logo" boxSize="50px" borderRadius="md" mr={3} />
         <Heading
           size="xl"
-          fontFamily="'Playfair SC', serif"
+          fontFamily="'Playfair Display SC', serif"
           letterSpacing="widest"
           color="teal.100"
           textTransform="none"
