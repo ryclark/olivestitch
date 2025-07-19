@@ -9,7 +9,8 @@ import {
   Tbody,
   Tr,
   Th,
-  Td
+  Td,
+  IconButton
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthenticator } from '@aws-amplify/ui-react';
@@ -20,6 +21,8 @@ import ImportWizard from './ImportWizard';
 import type { PatternDetails } from './types';
 import { saveProject } from './utils';
 import { estimateTimeRange } from './timeEstimator';
+import { FiInfo } from "react-icons/fi";
+
 
 const client = generateClient<Schema>();
 
@@ -170,7 +173,7 @@ export default function Projects() {
               pattern.colors.length,
               pattern.confettiLevel ?? 1
             );
-            const est = `${times[4].toFixed(1)}-${times[0].toFixed(1)}`;
+            const est = `${times[4].toFixed(1)} hrs - ${times[0].toFixed(1)} hrs `;
             const created = p.createdAt
               ? new Date(p.createdAt).toLocaleDateString()
               : '';
@@ -191,7 +194,41 @@ export default function Projects() {
                   <Image src={p.image} alt="reference" boxSize="80px" objectFit="cover" />
                 </Td>
                 <Td>{created}</Td>
-                <Td>{est}</Td>
+                <Td>{est} 
+                  <Popover placement="right">
+                          <PopoverTrigger>
+                            <IconButton
+                              aria-label="time-info"
+                              icon={<FiInfo />}
+                              variant="ghost"
+                              size="xs"
+                              ml={1}
+                            />
+                          </PopoverTrigger>
+                          <PopoverContent width="260px">
+                            <PopoverArrow />
+                            <PopoverCloseButton />
+                            <PopoverBody fontSize="sm">
+                               <Box fontSize="sm" mt={1}>
+                                  Beginner: {times[0].toFixed(1)} hrs
+                                  <br />
+                                  Level 2: {times[1].toFixed(1)} hrs
+                                  <br />
+                                  Level 3: {times[2].toFixed(1)} hrs
+                                  <br />
+                                  Level 4: {times[3].toFixed(1)} hrs
+                                  <br />
+                                  Expert: {times[4].toFixed(1)} hrs
+                                </Box>
+                              <Box fontSize="sm" mt={1}> Estimated time is based on total stitch count, number of floss colors
+                              (which affect thread changes), and a confetti level (how scattered the
+                              colors are). We provide a range based on the stitching speed depending on
+                              whether you're a beginner or advanced stitcher.
+                            </Box>
+                            </PopoverBody>
+                          </PopoverContent>
+                        </Popover>
+                </Td>
                 <Td>{progressText}</Td>
                 <Td>
                   <Button
