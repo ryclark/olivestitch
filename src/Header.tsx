@@ -33,11 +33,15 @@ export default function Header() {
         <Heading
           size="xl"
           fontFamily="'Playfair Display SC', serif"
-          letterSpacing="widest"
+          letterSpacing="tight"
           color="teal.100"
           textTransform="none"
         >
-          Olive & Thread
+          Olive{' '}
+          <Box as="span" fontSize="0.8em">
+            &amp;
+          </Box>{' '}
+          Thread
         </Heading>
         <Spacer />
         {user && (
