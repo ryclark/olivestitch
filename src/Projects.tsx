@@ -42,7 +42,8 @@ export default function Projects() {
   const fetchProjects = async () => {
     const { data } = await client.models.Project.list();
     const records = await Promise.all(
-      (data as any[]).map(async (p: any) => {
+      (data as unknown[]).map(async (raw) => {
+        const p = raw as ProjectRecord;
         if (p.image) {
           // Images are stored in identity-scoped paths, so the default access level is sufficient
           const { url } = await getUrl({ path: p.image });
