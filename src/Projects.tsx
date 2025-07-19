@@ -150,8 +150,10 @@ export default function Projects() {
         <Thead>
           <Tr>
             <Th>Pattern</Th>
-            <Th>Start Date</Th>
+            <Th>Reference Image</Th>
+            <Th>Creation Date</Th>
             <Th>Est. Hours</Th>
+            <Th>Progress</Th>
             <Th></Th>
           </Tr>
         </Thead>
@@ -160,14 +162,28 @@ export default function Projects() {
             const pattern: PatternDetails = JSON.parse(p.pattern);
             const stitches = pattern.grid.length * (pattern.grid[0]?.length || 0);
             const est = `${(stitches / 80).toFixed(1)}-${(stitches / 60).toFixed(1)}`;
-            const start = p.createdAt ? new Date(p.createdAt).toLocaleDateString() : '';
+            const created = p.createdAt
+              ? new Date(p.createdAt).toLocaleDateString()
+              : '';
+            const totalSections =
+              Math.ceil(pattern.grid.length / pattern.fabricCount) *
+              Math.ceil((pattern.grid[0]?.length || 0) / pattern.fabricCount);
+            const completedSections = p.progress.length;
+            const percent = totalSections
+              ? Math.round((completedSections / totalSections) * 100)
+              : 0;
+            const progressText = `${percent}% (${completedSections} / ${totalSections} Sections Complete)`;
             return (
               <Tr key={p.id}>
                 <Td>
                   <Image src={p.gridImage} alt="pattern" boxSize="80px" objectFit="cover" />
                 </Td>
-                <Td>{start}</Td>
+                <Td>
+                  <Image src={p.image} alt="reference" boxSize="80px" objectFit="cover" />
+                </Td>
+                <Td>{created}</Td>
                 <Td>{est}</Td>
+                <Td>{progressText}</Td>
                 <Td>
                   <Button
                     size="sm"
