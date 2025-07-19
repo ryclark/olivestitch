@@ -177,7 +177,7 @@ export async function createThumbnail(
         return;
       }
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      resolve(canvas.toDataURL('image/png'));
+      resolve(canvas.toDataURL('image/jpeg', 0.8));
     };
     img.onerror = () => reject(new Error('Unable to create thumbnail'));
     img.src = src;
@@ -186,7 +186,7 @@ export async function createThumbnail(
 
 export function dataUrlToBlob(dataUrl: string): Blob {
   const parts = dataUrl.split(',');
-  const mime = parts[0]?.match(/:(.*?);/)?.[1] || 'image/png';
+  const mime = parts[0]?.match(/:(.*?);/)?.[1] || 'image/jpeg';
   const bytes = atob(parts[1]);
   const arr = new Uint8Array(bytes.length);
   for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
@@ -201,9 +201,9 @@ export async function saveProject(
   const blob = dataUrlToBlob(thumb);
   const upload = await uploadData({
     path: ({ identityId }) =>
-      `customer-images/${identityId}/${crypto.randomUUID()}.png`,
+      `customer-images/${identityId}/${crypto.randomUUID()}.jpg`,
     data: blob,
-    options: { contentType: 'image/png' },
+    options: { contentType: 'image/jpeg' },
   });
   const result = await upload.result;
   const { data } = await client.models.Project.create({
