@@ -10,7 +10,13 @@ import {
   Tr,
   Th,
   Td,
-  IconButton
+  IconButton,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthenticator } from '@aws-amplify/ui-react';
@@ -240,6 +246,16 @@ export default function Projects() {
                     }
                   >
                     Continue
+                  </Button>
+                  <Button
+                    size="sm"
+                    colorScheme="blue"
+                    mr={2}
+                    onClick={() =>
+                      navigate('/shopping-list', { state: { pattern } })
+                    }
+                  >
+                    Shopping List
                   </Button>
                   <Button
                     size="sm"

@@ -33,6 +33,7 @@ import Footer from './Footer';
 import DeepDive from './DeepDive';
 import Projects from './Projects';
 import FlossBox from './FlossBox';
+import ShoppingList from './ShoppingList';
 import { useNavigate, useLocation } from 'react-router-dom';
 import sample1 from './images/samples/dancer.png';
 import sample2 from './images/samples/baloons.png';
@@ -160,6 +161,18 @@ export default function App() {
         <Header />
         <Box flex="1">
           <DeepDive />
+        </Box>
+        <Footer />
+      </Box>
+    );
+  }
+
+  if (location.pathname === '/shopping-list') {
+    return (
+      <Box minH="100vh" minW="100vw" display="flex" flexDirection="column">
+        <Header />
+        <Box flex="1">
+          <ShoppingList />
         </Box>
         <Footer />
       </Box>
