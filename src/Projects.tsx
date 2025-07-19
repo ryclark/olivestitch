@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import {
- Box,
+  Box,
   Button,
   Image,
   Input,
@@ -16,7 +16,8 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   PopoverBody,
-  IconButton
+  IconButton,
+  Heading
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthenticator } from '@aws-amplify/ui-react';
@@ -133,6 +134,28 @@ export default function Projects() {
     fetchProjects();
   };
 
+  const openProjects = projects.filter(p => {
+    const pattern: PatternDetails = {
+      confettiLevel: 1,
+      ...JSON.parse(p.pattern)
+    };
+    const totalSections =
+      Math.ceil(pattern.grid.length / pattern.fabricCount) *
+      Math.ceil((pattern.grid[0]?.length || 0) / pattern.fabricCount);
+    return p.progress.length < totalSections;
+  });
+
+  const completedProjects = projects.filter(p => {
+    const pattern: PatternDetails = {
+      confettiLevel: 1,
+      ...JSON.parse(p.pattern)
+    };
+    const totalSections =
+      Math.ceil(pattern.grid.length / pattern.fabricCount) *
+      Math.ceil((pattern.grid[0]?.length || 0) / pattern.fabricCount);
+    return p.progress.length >= totalSections;
+  });
+
   if (!user) {
     return <Box p={4}>Please sign in to manage your projects.</Box>;
   }
@@ -168,7 +191,7 @@ export default function Projects() {
           </Tr>
         </Thead>
         <Tbody>
-          {projects.map(p => {
+          {openProjects.map(p => {
             const pattern: PatternDetails = {
               confettiLevel: 1,
               ...JSON.parse(p.pattern)
@@ -270,6 +293,125 @@ export default function Projects() {
           })}
         </Tbody>
       </Table>
+      {completedProjects.length > 0 && (
+        <>
+          <Heading size="md" mt={8} mb={2}>Completed</Heading>
+          <Table variant="simple">
+            <Thead>
+              <Tr>
+                <Th>Pattern</Th>
+                <Th>Reference Image</Th>
+                <Th>Creation Date</Th>
+                <Th>Est. Hours</Th>
+                <Th>Progress</Th>
+                <Th></Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {completedProjects.map(p => {
+                const pattern: PatternDetails = {
+                  confettiLevel: 1,
+                  ...JSON.parse(p.pattern)
+                };
+                const stitches = pattern.grid.length * (pattern.grid[0]?.length || 0);
+                const times = estimateTimeRange(
+                  stitches,
+                  pattern.colors.length,
+                  pattern.confettiLevel ?? 1
+                );
+                const est = `${times[4].toFixed(1)} hrs - ${times[0].toFixed(1)} hrs`;
+                const created = p.createdAt
+                  ? new Date(p.createdAt).toLocaleDateString()
+                  : '';
+                const totalSections =
+                  Math.ceil(pattern.grid.length / pattern.fabricCount) *
+                  Math.ceil((pattern.grid[0]?.length || 0) / pattern.fabricCount);
+                const completedSections = p.progress.length;
+                const percent = totalSections
+                  ? Math.round((completedSections / totalSections) * 100)
+                  : 0;
+                const progressText = `${percent}% (${completedSections} / ${totalSections} Sections Complete)`;
+                return (
+                  <Tr key={p.id}>
+                    <Td>
+                      <Image src={p.gridImage} alt="pattern" boxSize="80px" objectFit="cover" />
+                    </Td>
+                    <Td>
+                      <Image src={p.image} alt="reference" boxSize="80px" objectFit="cover" />
+                    </Td>
+                    <Td>{created}</Td>
+                    <Td>{est}
+                      <Popover placement="right">
+                          <PopoverTrigger>
+                            <IconButton
+                              aria-label="time-info"
+                              icon={<FiInfo />}
+                              variant="ghost"
+                              size="xs"
+                              ml={1}
+                            />
+                          </PopoverTrigger>
+                          <PopoverContent width="260px">
+                            <PopoverArrow />
+                            <PopoverCloseButton />
+                            <PopoverBody fontSize="sm">
+                               <Box fontSize="sm" mt={1}>
+                                  Beginner: {times[0].toFixed(1)} hrs
+                                  <br />
+                                  Level 2: {times[1].toFixed(1)} hrs
+                                  <br />
+                                  Level 3: {times[2].toFixed(1)} hrs
+                                  <br />
+                                  Level 4: {times[3].toFixed(1)} hrs
+                                  <br />
+                                  Expert: {times[4].toFixed(1)} hrs
+                                </Box>
+                              <Box fontSize="sm" mt={1}> Estimated time is based on total stitch count, number of floss colors
+                              (which affect thread changes), and a confetti level (how scattered the
+                              colors are). We provide a range based on the stitching speed depending on
+                              whether you're a beginner or advanced stitcher.
+                            </Box>
+                            </PopoverBody>
+                          </PopoverContent>
+                        </Popover>
+                    </Td>
+                    <Td>{progressText}</Td>
+                    <Td>
+                      <Button
+                        size="sm"
+                        colorScheme="teal"
+                        mr={2}
+                        onClick={() =>
+                          navigate('/deep-dive', { state: { pattern, progress: p.progress, id: p.id } })
+                        }
+                      >
+                        Continue
+                      </Button>
+                      <Button
+                        size="sm"
+                        colorScheme="blue"
+                        mr={2}
+                        onClick={() =>
+                          navigate('/shopping-list', { state: { pattern } })
+                        }
+                      >
+                        Shopping List
+                      </Button>
+                      <Button
+                        size="sm"
+                        colorScheme="red"
+                        onClick={() => deleteProject(p)}
+                      >
+                        Delete
+                      </Button>
+                    </Td>
+                  </Tr>
+                );
+              })}
+            </Tbody>
+          </Table>
+        </>
+      )}
     </Box>
   );
 }
