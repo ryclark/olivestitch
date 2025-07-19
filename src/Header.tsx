@@ -31,13 +31,13 @@ export default function Header() {
       <Flex align="center" minW="960px" width="100%" maxW="960px" mx="auto" p={2}>
         <Image src={logo} alt="SnapStitch logo" boxSize="50px" borderRadius="md" mr={3} />
         <Heading
-          size="2xl"
-          fontFamily="'Bebas Neue', sans-serif"
-          letterSpacing="normal"
+          size="xl"
+          fontFamily="'Playfair SC', serif"
+          letterSpacing="widest"
           color="teal.100"
-          textTransform="uppercase"
+          textTransform="none"
         >
-          Olive Stitch
+          Olive & Thread
         </Heading>
         <Spacer />
         {user && (
