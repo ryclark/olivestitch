@@ -19,6 +19,8 @@ export interface GridProps {
   onCellClick?: (y: number, x: number, color: string | null) => void;
   markComplete?: boolean;
   completedCells?: Set<string> | null;
+  symbolMap?: Record<string, string> | null;
+  showSymbols?: boolean;
 }
 
 export default function Grid({
@@ -31,7 +33,9 @@ export default function Grid({
     activeColor = null,
     onCellClick,
   markComplete = false,
-  completedCells = null
+  completedCells = null,
+  symbolMap = null,
+  showSymbols = false
 }: GridProps) {
   const rows = grid.length;
   const cols = grid[0]?.length || 0;
@@ -66,6 +70,8 @@ export default function Grid({
       {grid.map((row, y) =>
         row.map((color, x) => {
           const dmcLabel = hexToDmc(color) || `(${x + 1}, ${y + 1})`;
+          const code = DMC_COLORS.find(c => c.hex.toLowerCase() === (color || '').toLowerCase())?.code;
+          const symbol = showSymbols && code && symbolMap ? symbolMap[code] : '';
           const colorFiltered =
             activeColor &&
             (color || '').toLowerCase() !== activeColor.toLowerCase();
@@ -81,7 +87,7 @@ export default function Grid({
               onClick={() => handleCellClick(y, x)}
               w={cellSize}
               h={cellSize}
-              bg={displayColor || '#fff'}
+              bg={showSymbols ? '#fff' : displayColor || '#fff'}
               border={showGrid ? '1px solid #ccc' : 'none'}
               boxSizing="border-box"
               cursor="pointer"
@@ -89,11 +95,17 @@ export default function Grid({
               display="flex"
               alignItems="center"
               justifyContent="center"
-              color={isComplete ? overlayShade(displayColor || '#fff') : 'inherit'}
-              fontWeight={isComplete ? 'bold' : 'normal'}
+              color={
+                isComplete
+                  ? overlayShade(displayColor || '#fff')
+                  : showSymbols
+                    ? '#000'
+                    : 'inherit'
+              }
+              fontWeight={isComplete || showSymbols ? 'bold' : 'normal'}
               title={dmcLabel}
             >
-              {isComplete ? 'X' : null}
+              {isComplete ? 'X' : symbol}
             </Box>
           );
         })
