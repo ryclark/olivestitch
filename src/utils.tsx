@@ -144,7 +144,47 @@ export function overlayShade(hex: string): string {
   return shadeColor(hex, brightness > 0.6 ? -0.4 : 0.4);
 }
 
-function dataUrlToBlob(dataUrl: string): Blob {
+// Generate a small data URL thumbnail from a File or data URL string
+export async function createThumbnail(
+  image: string | File,
+  maxDim = 400
+): Promise<string> {
+  const srcPromise =
+    typeof image === 'string'
+      ? Promise.resolve(image)
+      : new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = e => {
+            const result = e.target?.result;
+            if (typeof result === 'string') resolve(result);
+            else reject(new Error('Unable to read image'));
+          };
+          reader.onerror = () => reject(new Error('Unable to read image'));
+          reader.readAsDataURL(image);
+        });
+
+  const src = await srcPromise;
+  return new Promise<string>((resolve, reject) => {
+    const img = new window.Image();
+    img.onload = () => {
+      const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        resolve(src);
+        return;
+      }
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL('image/png'));
+    };
+    img.onerror = () => reject(new Error('Unable to create thumbnail'));
+    img.src = src;
+  });
+}
+
+export function dataUrlToBlob(dataUrl: string): Blob {
   const parts = dataUrl.split(',');
   const mime = parts[0]?.match(/:(.*?);/)?.[1] || 'image/png';
   const bytes = atob(parts[1]);
@@ -157,7 +197,8 @@ export async function saveProject(
   image: string | File,
   pattern: PatternDetails
 ) {
-  const blob = image instanceof File ? image : dataUrlToBlob(image);
+  const thumb = await createThumbnail(image);
+  const blob = dataUrlToBlob(thumb);
   const upload = await uploadData({
     path: ({ identityId }) =>
       `customer-images/${identityId}/${crypto.randomUUID()}.png`,

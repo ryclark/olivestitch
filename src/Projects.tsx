@@ -1,5 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-import { Box, Button, Image, Input, SimpleGrid, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Image,
+  Input,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td
+} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/data';
@@ -16,6 +27,7 @@ interface ProjectRecord {
   image: string;
   pattern: string;
   progress: string[];
+  createdAt?: string;
 }
 
 export default function Projects() {
@@ -109,30 +121,44 @@ export default function Projects() {
           onComplete={handleWizardComplete}
         />
       )}
-      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-        {projects.map(p => {
-          const pattern: PatternDetails = JSON.parse(p.pattern);
-          const done = (p.progress ? p.progress.length : 0);
-          const total =
-            Math.ceil(pattern.grid.length / pattern.fabricCount) *
-            Math.ceil(pattern.grid[0].length / pattern.fabricCount);
-          return (
-            <Box
-              key={p.id}
-              borderWidth="1px"
-              p={2}
-              borderRadius="md"
-              cursor="pointer"
-              onClick={() =>
-                navigate('/deep-dive', { state: { pattern, progress: p.progress, id: p.id } })
-              }
-            >
-              <Image src={p.image} alt="project" mb={2} />
-              <Text>Progress: {done} / {total}</Text>
-            </Box>
-          );
-        })}
-      </SimpleGrid>
+      <Table variant="simple">
+        <Thead>
+          <Tr>
+            <Th>Thumbnail</Th>
+            <Th>Start Date</Th>
+            <Th>Est. Hours</Th>
+            <Th></Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {projects.map(p => {
+            const pattern: PatternDetails = JSON.parse(p.pattern);
+            const stitches = pattern.grid.length * (pattern.grid[0]?.length || 0);
+            const est = `${(stitches / 80).toFixed(1)}-${(stitches / 60).toFixed(1)}`;
+            const start = p.createdAt ? new Date(p.createdAt).toLocaleDateString() : '';
+            return (
+              <Tr key={p.id}>
+                <Td>
+                  <Image src={p.image} alt="project" boxSize="80px" objectFit="cover" />
+                </Td>
+                <Td>{start}</Td>
+                <Td>{est}</Td>
+                <Td>
+                  <Button
+                    size="sm"
+                    colorScheme="teal"
+                    onClick={() =>
+                      navigate('/deep-dive', { state: { pattern, progress: p.progress, id: p.id } })
+                    }
+                  >
+                    Continue
+                  </Button>
+                </Td>
+              </Tr>
+            );
+          })}
+        </Tbody>
+      </Table>
     </Box>
   );
 }
