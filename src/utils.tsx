@@ -201,16 +201,32 @@ export async function saveProject(
   pattern: PatternDetails
 ) {
   const thumb = await createThumbnail(image);
+  const gridPng = exportGridAsPng(pattern.grid, 10, false);
+  const gridThumb = await createThumbnail(gridPng);
   const blob = dataUrlToBlob(thumb);
-  const upload = await uploadData({
-    path: ({ identityId }) =>
-      `customer-images/${identityId}/${crypto.randomUUID()}.jpg`,
-    data: blob,
-    options: { contentType: 'image/jpeg' },
-  });
-  const result = await upload.result;
+  const gridBlob = dataUrlToBlob(gridThumb);
+
+  const [imageUpload, gridUpload] = await Promise.all([
+    uploadData({
+      path: ({ identityId }) =>
+        `customer-images/${identityId}/${crypto.randomUUID()}.jpg`,
+      data: blob,
+      options: { contentType: 'image/jpeg' },
+    }),
+    uploadData({
+      path: ({ identityId }) =>
+        `customer-images/${identityId}/${crypto.randomUUID()}.jpg`,
+      data: gridBlob,
+      options: { contentType: 'image/jpeg' },
+    }),
+  ]);
+
+  const imageResult = await imageUpload.result;
+  const gridResult = await gridUpload.result;
+
   const { data } = await client.models.Project.create({
-    image: result.path,
+    image: imageResult.path,
+    gridImage: gridResult.path,
     pattern: JSON.stringify(pattern),
     progress: [],
   });

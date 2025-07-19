@@ -10,6 +10,7 @@ const schema = a.schema({
   Project: a
     .model({
       image: a.string(),
+      gridImage: a.string(),
       pattern: a.string(),
       progress: a.string().array(),
     })
