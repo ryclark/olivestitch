@@ -14,8 +14,17 @@ import {
   DrawerCloseButton,
   Switch,
   FormControl,
-  FormLabel
+  FormLabel,
+  Flex,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody,
+  IconButton
 } from '@chakra-ui/react';
+import { InfoIcon } from '@chakra-ui/icons';
 import GridMagnifier from './GridMagnifier';
 import UsedColors from './UsedColors';
 import ImportWizard from './ImportWizard';
@@ -31,6 +40,7 @@ import sample3 from './images/samples/rain.png';
 
 import type { PatternDetails } from './types';
 import { saveProject } from './utils';
+import { estimateTimeRange } from './timeEstimator';
 
 export default function App() {
   const [importImage, setImportImage] = useState<HTMLImageElement | null>(null);
@@ -295,20 +305,47 @@ export default function App() {
               <Box mb={4}>
                 {(() => {
                   const stitches = pattern.grid.length * (pattern.grid[0]?.length || 0);
-                  const fmt = (min: number, max: number) => {
-                    const minHrs = (stitches / max).toFixed(1);
-                    const maxHrs = (stitches / min).toFixed(1);
-                    return `${minHrs}-${maxHrs}`;
-                  };
+                  const times = estimateTimeRange(
+                    stitches,
+                    pattern.colors.length,
+                    pattern.confettiLevel ?? 1
+                  );
                   return (
                     <>
-                      <strong>Estimated Time (hrs)</strong>
+                      <Flex align="center">
+                        <strong>Estimated Time (hrs)</strong>
+                        <Popover placement="right">
+                          <PopoverTrigger>
+                            <IconButton
+                              aria-label="time-info"
+                              icon={<InfoIcon />}
+                              variant="ghost"
+                              size="xs"
+                              ml={1}
+                            />
+                          </PopoverTrigger>
+                          <PopoverContent width="260px">
+                            <PopoverArrow />
+                            <PopoverCloseButton />
+                            <PopoverBody fontSize="sm">
+                              Estimated time is based on total stitch count, number of floss colors
+                              (which affect thread changes), and a confetti level (how scattered the
+                              colors are). We provide a range based on the stitching speed depending on
+                              whether you're a beginner or advanced stitcher.
+                            </PopoverBody>
+                          </PopoverContent>
+                        </Popover>
+                      </Flex>
                       <Box fontSize="sm" mt={1}>
-                        Beginner (40-50 sph): {fmt(40, 50)}
+                        Beginner: {times[0].toFixed(1)} hrs
                         <br />
-                        Average (60-80 sph): {fmt(60, 80)}
+                        Level 2: {times[1].toFixed(1)} hrs
                         <br />
-                        Experienced (100-150 sph): {fmt(100, 150)}
+                        Level 3: {times[2].toFixed(1)} hrs
+                        <br />
+                        Level 4: {times[3].toFixed(1)} hrs
+                        <br />
+                        Expert: {times[4].toFixed(1)} hrs
                       </Box>
                     </>
                   );

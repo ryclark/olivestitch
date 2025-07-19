@@ -19,6 +19,7 @@ import type { Schema } from '../amplify/data/resource';
 import ImportWizard from './ImportWizard';
 import type { PatternDetails } from './types';
 import { saveProject } from './utils';
+import { estimateTimeRange } from './timeEstimator';
 
 const client = generateClient<Schema>();
 
@@ -159,9 +160,17 @@ export default function Projects() {
         </Thead>
         <Tbody>
           {projects.map(p => {
-            const pattern: PatternDetails = JSON.parse(p.pattern);
+            const pattern: PatternDetails = {
+              confettiLevel: 1,
+              ...JSON.parse(p.pattern)
+            };
             const stitches = pattern.grid.length * (pattern.grid[0]?.length || 0);
-            const est = `${(stitches / 80).toFixed(1)}-${(stitches / 60).toFixed(1)}`;
+            const times = estimateTimeRange(
+              stitches,
+              pattern.colors.length,
+              pattern.confettiLevel ?? 1
+            );
+            const est = `${times[4].toFixed(1)}-${times[0].toFixed(1)}`;
             const created = p.createdAt
               ? new Date(p.createdAt).toLocaleDateString()
               : '';

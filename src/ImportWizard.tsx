@@ -52,6 +52,7 @@ export interface ImportWizardProps {
     colors: string[];
     colorUsage: Record<string, number>;
     symbols: Record<string, string>;
+    confettiLevel: number;
   }) => void;
 }
 
@@ -114,6 +115,7 @@ export default function ImportWizard({
   const [floss, setFloss] = useState<{ id: string; code: string }[]>([]);
   const [showMine, setShowMine] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [confetti, setConfetti] = useState<number>(1);
   
   useEffect(() => {
     if (!user) return;
@@ -257,7 +259,8 @@ export default function ImportWizard({
       heightIn,
       colors,
       colorUsage,
-      symbols: generateSymbolMap(colors)
+      symbols: generateSymbolMap(colors),
+      confettiLevel: confetti
     });
   };
 
@@ -544,6 +547,15 @@ export default function ImportWizard({
                 setSelected={setSelectedColor}
                 colors={showMine ? flossPalette : DMC_COLORS}
               />
+              <FormControl mt={4}>
+                <FormLabel textAlign='center'>Confetti Level: {confetti}</FormLabel>
+                <Slider min={1} max={10} step={1} value={confetti} onChange={setConfetti}>
+                  <SliderTrack>
+                    <SliderFilledTrack />
+                  </SliderTrack>
+                  <SliderThumb />
+                </Slider>
+              </FormControl>
             </Box>
             <Flex justify='space-between' mt={4}>
               <Button onClick={prevStep}>Back</Button>
