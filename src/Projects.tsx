@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import {
-  Box,
+ Box,
   Button,
   Image,
   Input,
@@ -246,6 +246,16 @@ export default function Projects() {
                     }
                   >
                     Continue
+                  </Button>
+                  <Button
+                    size="sm"
+                    colorScheme="blue"
+                    mr={2}
+                    onClick={() =>
+                      navigate('/shopping-list', { state: { pattern } })
+                    }
+                  >
+                    Shopping List
                   </Button>
                   <Button
                     size="sm"
