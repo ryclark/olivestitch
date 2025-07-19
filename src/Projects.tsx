@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import {
-  Box,
+ Box,
   Button,
   Image,
   Input,
@@ -10,13 +10,13 @@ import {
   Tr,
   Th,
   Td,
-  IconButton,
   Popover,
   PopoverTrigger,
   PopoverContent,
   PopoverArrow,
   PopoverCloseButton,
-  PopoverBody
+  PopoverBody,
+  IconButton
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthenticator } from '@aws-amplify/ui-react';
