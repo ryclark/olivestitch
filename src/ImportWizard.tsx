@@ -16,6 +16,7 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
+  Switch,
   Stepper,
   Step,
   StepIndicator,
@@ -34,6 +35,10 @@ import Grid from './Grid';
 import { findClosestDmcColor, getColorUsage, reduceColors } from './utils';
 import Collapsible from './Collapsible';
 import UsedColors from './UsedColors';
+import ColorPalette, { DMC_COLORS } from './ColorPalette';
+import { useAuthenticator } from '@aws-amplify/ui-react';
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../amplify/data/resource';
 
 export interface ImportWizardProps {
   img: HTMLImageElement;
@@ -103,6 +108,23 @@ export default function ImportWizard({
   const [reduceTo, setReduceTo] = useState<number>(1);
   const [maxColors, setMaxColors] = useState<number>(1);
   const colorUsage = useMemo(() => (preview ? getColorUsage(preview) : {}), [preview]);
+  const { user } = useAuthenticator(ctx => [ctx.user]);
+  const client = useMemo(() => generateClient<Schema>(), []);
+  const [floss, setFloss] = useState<{ id: string; code: string }[]>([]);
+  const [showMine, setShowMine] = useState(false);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  
+  useEffect(() => {
+    if (!user) return;
+    client.models.Floss.list().then(({ data }) => {
+      setFloss(data as { id: string; code: string }[]);
+    });
+  }, [client, user]);
+
+  const flossPalette = useMemo(() => {
+    const set = new Set(floss.map(f => f.code));
+    return DMC_COLORS.filter(c => set.has(c.code));
+  }, [floss]);
 
   // Size preview scale so the design preview fits inside the wizard
   const previewScale = Math.min(
@@ -494,6 +516,17 @@ export default function ImportWizard({
               <Collapsible label={<Text textAlign='center'>{reduceTo} colors</Text>}>
                 <UsedColors colors={Object.keys(colorUsage)} usage={colorUsage} />
               </Collapsible>
+              {user && (
+                <FormControl display='flex' alignItems='center' justifyContent='center' mt={2}>
+                  <FormLabel htmlFor='floss-toggle' mb='0'>Use my floss box</FormLabel>
+                  <Switch id='floss-toggle' isChecked={showMine} onChange={e => setShowMine(e.target.checked)} />
+                </FormControl>
+              )}
+              <ColorPalette
+                selected={selectedColor}
+                setSelected={setSelectedColor}
+                colors={showMine ? flossPalette : DMC_COLORS}
+              />
             </Box>
             <Flex justify='space-between' mt={4}>
               <Button onClick={prevStep}>Back</Button>
