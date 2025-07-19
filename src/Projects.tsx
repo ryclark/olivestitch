@@ -14,7 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/data';
-import { getUrl } from '@aws-amplify/storage';
+import { getUrl, remove } from '@aws-amplify/storage';
 import type { Schema } from '../amplify/data/resource';
 import ImportWizard from './ImportWizard';
 import type { PatternDetails } from './types';
@@ -25,6 +25,7 @@ const client = generateClient<Schema>();
 interface ProjectRecord {
   id: string;
   image: string;
+  imageKey: string;
   pattern: string;
   progress: string[];
   createdAt?: string;
@@ -41,13 +42,13 @@ export default function Projects() {
   const fetchProjects = async () => {
     const { data } = await client.models.Project.list();
     const records = await Promise.all(
-      (data as ProjectRecord[]).map(async p => {
+      (data as any[]).map(async (p: any) => {
         if (p.image) {
           // Images are stored in identity-scoped paths, so the default access level is sufficient
           const { url } = await getUrl({ path: p.image });
-          return { ...p, image: url.href };
+          return { ...p, image: url.href, imageKey: p.image };
         }
-        return p;
+        return { ...p, imageKey: p.image };
       })
     );
     setProjects(records);
@@ -96,6 +97,15 @@ export default function Projects() {
 
   const openFileDialog = () => {
     if (fileInputRef.current) fileInputRef.current.click();
+  };
+
+  const deleteProject = async (p: ProjectRecord) => {
+    if (!window.confirm('Delete this project?')) return;
+    await Promise.all([
+      client.models.Project.delete({ id: p.id }),
+      p.imageKey ? remove({ path: p.imageKey }) : Promise.resolve(),
+    ]);
+    fetchProjects();
   };
 
   if (!user) {
@@ -147,11 +157,19 @@ export default function Projects() {
                   <Button
                     size="sm"
                     colorScheme="teal"
+                    mr={2}
                     onClick={() =>
                       navigate('/deep-dive', { state: { pattern, progress: p.progress, id: p.id } })
                     }
                   >
                     Continue
+                  </Button>
+                  <Button
+                    size="sm"
+                    colorScheme="red"
+                    onClick={() => deleteProject(p)}
+                  >
+                    Delete
                   </Button>
                 </Td>
               </Tr>
