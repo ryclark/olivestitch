@@ -10,6 +10,12 @@ import {
   Tr,
   Th,
   Td,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody,
   IconButton
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
