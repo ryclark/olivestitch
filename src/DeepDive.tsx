@@ -67,7 +67,7 @@ export default function DeepDive() {
             setHover(null);
           }}
         >
-          {done && !selected && (
+          {done && (
             <Box
               position="absolute"
               top={0}
@@ -176,7 +176,7 @@ export default function DeepDive() {
             maxGridPx={maxGridPx}
             completedCells={completedCells}
             symbolMap={pattern.symbols}
-            showSymbols={showSymbols}
+            showSymbols={false}
           />
           <Box position="absolute" top={0} left={0} right={0} bottom={0}>
             {overlays}
