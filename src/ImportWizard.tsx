@@ -126,6 +126,19 @@ export default function ImportWizard({
     return DMC_COLORS.filter(c => set.has(c.code));
   }, [floss]);
 
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    if (step !== 3) return;
+    const g = generateGrid();
+    setGrid(g);
+    const count = Object.keys(getColorUsage(g)).length;
+    setMaxColors(count);
+    const val = Math.min(reduceTo, count);
+    setReduceTo(val);
+    setPreview(reduceColors(g, val));
+  }, [showMine]);
+  /* eslint-enable react-hooks/exhaustive-deps */
+
   // Size preview scale so the design preview fits inside the wizard
   const previewScale = Math.min(
     containerSize / gridWidth,
@@ -208,7 +221,8 @@ export default function ImportWizard({
       for (let x = 0; x < gridWidth; x++) {
         const idx = (y * gridWidth + x) * 4;
         const rgb = [data[idx], data[idx + 1], data[idx + 2]];
-        row.push(findClosestDmcColor(rgb));
+        const palette = showMine ? flossPalette : DMC_COLORS;
+        row.push(findClosestDmcColor(rgb, palette));
       }
       g.push(row);
     }

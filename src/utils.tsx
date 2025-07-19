@@ -68,10 +68,13 @@ export function reduceColors(grid: string[][], targetCount: number): string[][] 
 }
 
 // Find the closest DMC color (by RGB distance)
-export function findClosestDmcColor(rgb: number[]): string {
+export function findClosestDmcColor(
+  rgb: number[],
+  palette: typeof DMC_COLORS = DMC_COLORS
+): string {
   let minDist = Infinity;
-  let closest = DMC_COLORS[0];
-  DMC_COLORS.forEach(c => {
+  let closest = palette[0];
+  palette.forEach(c => {
     const dmcRgb = hexToRgb(c.hex);
     const dist = colorDist(rgb, dmcRgb);
     if (dist < minDist) {
