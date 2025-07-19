@@ -32,7 +32,7 @@ export default function Projects() {
       (data as ProjectRecord[]).map(async p => {
         if (p.image) {
           // Images are stored in identity-scoped paths, so the default access level is sufficient
-          const { url } = await getUrl({ key: p.image });
+          const { url } = await getUrl({ path: p.image });
           return { ...p, image: url.href };
         }
         return p;
