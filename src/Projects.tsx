@@ -26,6 +26,8 @@ interface ProjectRecord {
   id: string;
   image: string;
   imageKey: string;
+  gridImage: string;
+  gridKey: string;
   pattern: string;
   progress: string[];
   createdAt?: string;
@@ -44,12 +46,23 @@ export default function Projects() {
     const records = await Promise.all(
       (data as unknown[]).map(async (raw) => {
         const p = raw as ProjectRecord;
+        let imgUrl = p.image;
+        let gridUrl = p.gridImage;
         if (p.image) {
-          // Images are stored in identity-scoped paths, so the default access level is sufficient
           const { url } = await getUrl({ path: p.image });
-          return { ...p, image: url.href, imageKey: p.image };
+          imgUrl = url.href;
         }
-        return { ...p, imageKey: p.image };
+        if (p.gridImage) {
+          const { url } = await getUrl({ path: p.gridImage });
+          gridUrl = url.href;
+        }
+        return {
+          ...p,
+          image: imgUrl,
+          gridImage: gridUrl,
+          imageKey: p.image,
+          gridKey: p.gridImage,
+        };
       })
     );
     setProjects(records);
@@ -105,6 +118,7 @@ export default function Projects() {
     await Promise.all([
       client.models.Project.delete({ id: p.id }),
       p.imageKey ? remove({ path: p.imageKey }) : Promise.resolve(),
+      p.gridKey ? remove({ path: p.gridKey }) : Promise.resolve(),
     ]);
     fetchProjects();
   };
@@ -135,7 +149,7 @@ export default function Projects() {
       <Table variant="simple">
         <Thead>
           <Tr>
-            <Th>Thumbnail</Th>
+            <Th>Pattern</Th>
             <Th>Start Date</Th>
             <Th>Est. Hours</Th>
             <Th></Th>
@@ -150,7 +164,7 @@ export default function Projects() {
             return (
               <Tr key={p.id}>
                 <Td>
-                  <Image src={p.image} alt="project" boxSize="80px" objectFit="cover" />
+                  <Image src={p.gridImage} alt="pattern" boxSize="80px" objectFit="cover" />
                 </Td>
                 <Td>{start}</Td>
                 <Td>{est}</Td>
