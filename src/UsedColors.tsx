@@ -57,9 +57,7 @@ export default function UsedColors({
               >
                 {showSymbols ? symbol : ''}
               </Box>
-              <Text mt={1}>
-                {dmc ? (showSymbols && symbols ? symbol : dmc.code) : ''}
-              </Text>
+              <Text mt={1}>{dmc ? dmc.code : ''}</Text>
             </Box>
           </Tooltip>
         );

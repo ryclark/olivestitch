@@ -71,10 +71,13 @@ export default function Grid({
         row.map((color, x) => {
           const dmcLabel = hexToDmc(color) || `(${x + 1}, ${y + 1})`;
           const code = DMC_COLORS.find(c => c.hex.toLowerCase() === (color || '').toLowerCase())?.code;
-          const symbol = showSymbols && code && symbolMap ? symbolMap[code] : '';
           const colorFiltered =
             activeColor &&
             (color || '').toLowerCase() !== activeColor.toLowerCase();
+          const symbol =
+            showSymbols && !colorFiltered && code && symbolMap
+              ? symbolMap[code]
+              : '';
           const dimmed =
             activeCell && !(activeCell.y === y && activeCell.x === x);
           const displayColor = colorFiltered ? null : color;
