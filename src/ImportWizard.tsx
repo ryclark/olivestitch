@@ -32,7 +32,7 @@ import {
 
 const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
 import Grid from './Grid';
-import { findClosestDmcColor, getColorUsage, reduceColors } from './utils';
+import { findClosestDmcColor, getColorUsage, reduceColors, generateSymbolMap } from './utils';
 import Collapsible from './Collapsible';
 import UsedColors from './UsedColors';
 import ColorPalette, { DMC_COLORS } from './ColorPalette';
@@ -51,6 +51,7 @@ export interface ImportWizardProps {
     heightIn: number;
     colors: string[];
     colorUsage: Record<string, number>;
+    symbols: Record<string, string>;
   }) => void;
 }
 
@@ -248,13 +249,15 @@ export default function ImportWizard({
   };
 
   const handleFinish = () => {
+    const colors = Object.keys(colorUsage);
     onComplete({
       grid: preview!,
       fabricCount,
       widthIn,
       heightIn,
-      colors: Object.keys(colorUsage),
-      colorUsage
+      colors,
+      colorUsage,
+      symbols: generateSymbolMap(colors)
     });
   };
 

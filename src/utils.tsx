@@ -4,6 +4,39 @@ import { uploadData } from '@aws-amplify/storage';
 import type { Schema } from '../amplify/data/resource';
 import type { PatternDetails } from './types';
 
+export const STITCH_SYMBOLS = [
+  '●','○','■','□','▲','△','▼','▽','◆','◇',
+  '★','☆','✚','✖','✱','✦','✧','✩','✪','✫',
+  '✬','✭','✮','✯','☐','☑','☒','♠','♣','♥',
+  '♦','♢','♤','♧','⌂','♪','♫','♭','♮','♯',
+  '∆','π','Ω','Ψ','Φ','Λ','Θ','Σ','Γ','μ',
+  'λ','ζ','∞','⊥','⊙','⊗','⊕','⊖','⊞','⊟',
+  '◉','◌','◎','◍','◐','◑','◒','◓','◔','◕',
+  '◖','◗','◘','◙','◢','◣','◤','◥','◦','◯',
+  '◻','◼','◽','◾','▣','▤','▥','▦','▧','▨',
+  '▩','▢','◊'
+];
+
+export function hexToDmcCode(hex: string): string | null {
+  const found = DMC_COLORS.find(c => c.hex.toLowerCase() === hex.toLowerCase());
+  return found ? found.code : null;
+}
+
+export function generateSymbolMap(colors: string[]): Record<string, string> {
+  const map: Record<string, string> = {};
+  colors.forEach((hex, idx) => {
+    const code = hexToDmcCode(hex) || hex;
+    const base = STITCH_SYMBOLS[idx];
+    let symbol = base;
+    if (!symbol) {
+      const fallback = idx - STITCH_SYMBOLS.length;
+      symbol = String.fromCharCode(65 + (fallback % 26));
+    }
+    map[code] = symbol;
+  });
+  return map;
+}
+
 const client = generateClient<Schema>();
 
 // Convert hex to RGB array

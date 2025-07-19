@@ -5,4 +5,5 @@ export interface PatternDetails {
   heightIn: number;
   colors: string[];
   colorUsage: Record<string, number>;
+  symbols: Record<string, string>;
 }

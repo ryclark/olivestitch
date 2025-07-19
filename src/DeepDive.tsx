@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { Box, Flex, Button } from '@chakra-ui/react';
+import { Box, Flex, Button, Switch, FormControl, FormLabel } from '@chakra-ui/react';
 import UsedColors from './UsedColors';
 import { getColorUsage } from './utils';
 import { DMC_COLORS } from './ColorPalette';
@@ -26,6 +26,7 @@ export default function DeepDive() {
   const [completedSections, setCompletedSections] = useState<Set<string>>(
     new Set(progress || [])
   );
+  const [showSymbols, setShowSymbols] = useState<boolean>(false);
 
   const grid = useMemo(() => pattern?.grid ?? [], [pattern]);
   const fabricCount = pattern?.fabricCount ?? 14;
@@ -155,6 +156,16 @@ export default function DeepDive() {
       <Button mb={4} onClick={() => navigate(-1)} colorScheme="teal">
         Back
       </Button>
+      <FormControl display="flex" alignItems="center" mb={4} width="fit-content">
+        <FormLabel htmlFor="symbol-toggle" mb="0">
+          Symbols
+        </FormLabel>
+        <Switch
+          id="symbol-toggle"
+          isChecked={showSymbols}
+          onChange={e => setShowSymbols(e.target.checked)}
+        />
+      </FormControl>
       <Flex gap={4} flexDir={{ base: 'column', md: 'row' }} align="flex-start">
         <Box position="relative" width={gridWidth} height={gridHeight} flexShrink={0} overflow="hidden">
           <Grid
@@ -164,6 +175,8 @@ export default function DeepDive() {
             showGrid={true}
             maxGridPx={maxGridPx}
             completedCells={completedCells}
+            symbolMap={pattern.symbols}
+            showSymbols={showSymbols}
           />
           <Box position="absolute" top={0} left={0} right={0} bottom={0}>
             {overlays}
@@ -192,6 +205,8 @@ export default function DeepDive() {
             activeCell={focusedCell}
             activeColor={focusedColor}
             markComplete={sectionComplete}
+            symbolMap={pattern.symbols}
+            showSymbols={showSymbols}
               onCellClick={(_, __, color) => {
                 setFocusedCell(null);
                 setFocusedColor(prev => (prev === color ? prev : color));
@@ -202,6 +217,8 @@ export default function DeepDive() {
                 colors={Object.keys(colorUsage)}
                 usage={colorUsage}
                 activeColor={focusedColor}
+                symbols={pattern.symbols}
+                showSymbols={showSymbols}
                 onColorClick={color => {
                   setFocusedCell(null);
                   setFocusedColor(prev => (prev === color ? prev : color));

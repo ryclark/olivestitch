@@ -7,6 +7,8 @@ export interface UsedColorsProps {
   showSkeins?: boolean;
   activeColor?: string | null;
   onColorClick?: ((color: string) => void) | null;
+  symbols?: Record<string, string> | null;
+  showSymbols?: boolean;
 }
 
 export default function UsedColors({
@@ -14,7 +16,9 @@ export default function UsedColors({
   usage = {},
   showSkeins = false,
   activeColor = null,
-  onColorClick = null
+  onColorClick = null,
+  symbols = null,
+  showSymbols = false
 }: UsedColorsProps) {
   return (
     <Flex wrap="wrap" gap={2} justify="center">
@@ -39,7 +43,9 @@ export default function UsedColors({
                 borderRadius="4px"
                 m="0 auto"
               />
-              <Text mt={1}>{dmc ? dmc.code : ''}</Text>
+              <Text mt={1}>
+                {dmc ? (showSymbols && symbols ? symbols[dmc.code] : dmc.code) : ''}
+              </Text>
             </Box>
           </Tooltip>
         );
