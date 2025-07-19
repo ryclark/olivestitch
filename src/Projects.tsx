@@ -185,7 +185,7 @@ export default function Projects() {
             <Th>Pattern</Th>
             <Th>Reference Image</Th>
             <Th>Creation Date</Th>
-            <Th>Est. Hours</Th>
+            <Th>Est. Total Hours</Th>
             <Th>Progress</Th>
             <Th></Th>
           </Tr>
@@ -214,6 +214,16 @@ export default function Projects() {
               ? Math.round((completedSections / totalSections) * 100)
               : 0;
             const progressText = `${percent}% (${completedSections} / ${totalSections} Sections Complete)`;
+            const remainingStitches =
+              Math.round(
+                stitches * (totalSections - completedSections) / totalSections
+              );
+            const remainingTimes = estimateTimeRange(
+              remainingStitches,
+              pattern.colors.length,
+              pattern.confettiLevel ?? 1
+            );
+            const remainingEst = `${remainingTimes[4].toFixed(1)} hrs - ${remainingTimes[0].toFixed(1)} hrs`;
             return (
               <Tr key={p.id}>
                 <Td>
@@ -258,7 +268,12 @@ export default function Projects() {
                           </PopoverContent>
                         </Popover>
                 </Td>
-                <Td>{progressText}</Td>
+                <Td>
+                  {progressText}
+                  <Box fontSize="sm" mt={1} color="gray.600">
+                    Time Remaining: {remainingEst}
+                  </Box>
+                </Td>
                 <Td>
                   <Button
                     size="sm"
@@ -302,7 +317,7 @@ export default function Projects() {
                 <Th>Pattern</Th>
                 <Th>Reference Image</Th>
                 <Th>Creation Date</Th>
-                <Th>Est. Hours</Th>
+                <Th>Est. Total Hours</Th>
                 <Th>Progress</Th>
                 <Th></Th>
               </Tr>
@@ -331,6 +346,16 @@ export default function Projects() {
                   ? Math.round((completedSections / totalSections) * 100)
                   : 0;
                 const progressText = `${percent}% (${completedSections} / ${totalSections} Sections Complete)`;
+                const remainingStitches =
+                  Math.round(
+                    stitches * (totalSections - completedSections) / totalSections
+                  );
+                const remainingTimes = estimateTimeRange(
+                  remainingStitches,
+                  pattern.colors.length,
+                  pattern.confettiLevel ?? 1
+                );
+                const remainingEst = `${remainingTimes[4].toFixed(1)} hrs - ${remainingTimes[0].toFixed(1)} hrs`;
                 return (
                   <Tr key={p.id}>
                     <Td>
@@ -375,7 +400,12 @@ export default function Projects() {
                           </PopoverContent>
                         </Popover>
                     </Td>
-                    <Td>{progressText}</Td>
+                    <Td>
+                      {progressText}
+                      <Box fontSize="sm" mt={1} color="gray.600">
+                        Time Remaining: {remainingEst}
+                      </Box>
+                    </Td>
                     <Td>
                       <Button
                         size="sm"
