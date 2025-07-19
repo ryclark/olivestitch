@@ -7,6 +7,8 @@ interface LocationState {
   pattern?: PatternDetails;
 }
 
+const STITCHES_PER_SKEIN = 400; // approximate stitches per skein using two strands
+
 function getNeedleSize(fabricCount: number): number {
   if (fabricCount <= 14) return 24; // e.g. Aida 14
   if (fabricCount <= 18) return 26; // Aida 16-18
@@ -35,8 +37,9 @@ export default function ShoppingList() {
   const stitchHeight = pattern.grid.length;
   const fabricInchWidth = stitchWidth / pattern.fabricCount;
   const fabricInchHeight = stitchHeight / pattern.fabricCount;
-  const fabricWidth = fabricInchWidth + 6; // 3" margin each side
-  const fabricHeight = fabricInchHeight + 6;
+  const margin = 3; // inches of buffer on each side
+  const fabricWidth = fabricInchWidth + margin * 2;
+  const fabricHeight = fabricInchHeight + margin * 2;
 
   const needle = getNeedleSize(pattern.fabricCount);
   const hoopDim = Math.max(fabricInchWidth, fabricInchHeight) + 4;
@@ -47,9 +50,16 @@ export default function ShoppingList() {
       <Heading size="lg" mb={4}>Shopping List</Heading>
       <Box mb={4}>
         <Text fontWeight="bold">Fabric:</Text>
-        <Text>
-          {pattern.fabricCount}-count Aida, {fabricWidth.toFixed(1)}" x {fabricHeight.toFixed(1)}"
-        </Text>
+        <Box as="ul" pl={4} mt={1}>
+          <li>
+            <Text>{pattern.fabricCount}-count Aida</Text>
+          </li>
+          <li>
+            <Text>
+              Dimensions: at least {fabricWidth.toFixed(1)}" x {fabricHeight.toFixed(1)}" ({fabricInchWidth.toFixed(1)}" x {fabricInchHeight.toFixed(1)}" for the pattern, at least {margin}" buffer on each side and to accommodate the hoop size)
+            </Text>
+          </li>
+        </Box>
       </Box>
       <Box mb={4}>
         <Text fontWeight="bold">Needle:</Text>
@@ -73,8 +83,7 @@ export default function ShoppingList() {
             {pattern.colors.map(hex => {
               const dmc = DMC_COLORS.find(c => c.hex.toLowerCase() === hex.toLowerCase());
               const stitches = pattern.colorUsage[hex] || 0;
-              const skeinsExact = stitches / (315 / 18); // 18" per stitch
-              const skeins = Math.ceil(skeinsExact * 100) / 100;
+              const skeins = Math.ceil((stitches / STITCHES_PER_SKEIN) * 100) / 100;
               return (
                 <Tr key={hex}>
                   <Td>{dmc ? `${dmc.name} (#${dmc.code})` : hex}</Td>
