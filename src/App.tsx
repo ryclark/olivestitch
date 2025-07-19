@@ -24,7 +24,7 @@ import {
   PopoverBody,
   IconButton
 } from '@chakra-ui/react';
-import { LuInfo } from 'react-icons/lu';
+import { FiInfo } from "react-icons/fi";
 import GridMagnifier from './GridMagnifier';
 import UsedColors from './UsedColors';
 import ImportWizard from './ImportWizard';
@@ -318,7 +318,7 @@ export default function App() {
                           <PopoverTrigger>
                             <IconButton
                               aria-label="time-info"
-                              icon={<LuInfo />}
+                              icon={<FiInfo />}
                               variant="ghost"
                               size="xs"
                               ml={1}
