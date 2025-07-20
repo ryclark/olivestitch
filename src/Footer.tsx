@@ -77,10 +77,10 @@ export default function Footer() {
       </HStack>
     </Stack>
   </Flex>
-  <Drawer placement="bottom" size="lg" onClose={closeTerms} isOpen={isTermsOpen}>
+  <Drawer placement="right" size="lg" onClose={closeTerms} isOpen={isTermsOpen}>
     <DrawerOverlay />
     <DrawerContent>
-      <DrawerCloseButton />
+      <DrawerCloseButton color="black" _hover={{ bg: "gray.100" }}/>
       <DrawerHeader>Terms of Use</DrawerHeader>
       <DrawerBody>
         <Text mb={4}>Effective Date: July 19, 2025</Text>
@@ -153,10 +153,10 @@ export default function Footer() {
       </DrawerBody>
     </DrawerContent>
   </Drawer>
-  <Drawer placement="bottom" size="lg" onClose={closePrivacy} isOpen={isPrivacyOpen}>
+  <Drawer placement="right" size="lg" onClose={closePrivacy} isOpen={isPrivacyOpen}>
     <DrawerOverlay />
     <DrawerContent>
-      <DrawerCloseButton />
+      <DrawerCloseButton color="black" _hover={{ bg: "gray.100" }}/>
       <DrawerHeader>Privacy Policy</DrawerHeader>
       <DrawerBody>
         <Text mb={4}>Effective Date: July 19, 2025</Text>
