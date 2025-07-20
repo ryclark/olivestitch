@@ -33,6 +33,7 @@ import Footer from './Footer';
 import DeepDive from './DeepDive';
 import Projects from './Projects';
 import FlossBox from './FlossBox';
+import MyAccount from "./MyAccount";
 import ShoppingList from './ShoppingList';
 import { useNavigate, useLocation } from 'react-router-dom';
 import sample1 from './images/samples/dancer.png';
@@ -149,6 +150,17 @@ export default function App() {
         <Header />
         <Box flex="1">
           <FlossBox />
+        </Box>
+        <Footer />
+      </Box>
+    );
+
+  if (location.pathname === "/my-account") {
+    return (
+      <Box minH="100vh" minW="100vw" display="flex" flexDirection="column">
+        <Header />
+        <Box flex="1">
+          <MyAccount />
         </Box>
         <Footer />
       </Box>
