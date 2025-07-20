@@ -63,4 +63,23 @@ li:hover {
 a {
   font-weight: 800;
   text-decoration: none;
+}@media (max-width: 992px) {
+  .projects-reference-column {
+    display: none;
+  }
+}
+@media (max-width: 768px) {
+  .projects-created-column {
+    display: none;
+  }
+}
+@media (max-width: 640px) {
+  .projects-esthours-column {
+    display: none;
+  }
+}
+@media (max-width: 480px) {
+  .projects-progress-column {
+    display: none;
+  }
 }
