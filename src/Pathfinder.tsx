@@ -1,8 +1,25 @@
 import { useMemo, useState } from "react";
-import { Box, Button, Heading } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  Flex,
+  Text,
+  Switch,
+  FormControl,
+  FormLabel,
+} from "@chakra-ui/react";
+import {
+  FiArrowUp,
+  FiArrowDown,
+  FiArrowLeft,
+  FiArrowRight,
+} from "react-icons/fi";
+import type { IconType } from "react-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import Grid from "./Grid";
 import type { PatternDetails } from "./types";
+import { hexToDmcCode } from "./utils";
 
 interface Path {
   color: string;
@@ -92,6 +109,7 @@ export default function Pathfinder() {
   const [pathIdx, setPathIdx] = useState(0);
   const [stepIdx, setStepIdx] = useState(0);
   const [dir, setDir] = useState<1 | -1>(1);
+  const [showFullGrid, setShowFullGrid] = useState(true);
 
   const current = paths[pathIdx];
   const step = current?.cells[stepIdx];
@@ -133,14 +151,60 @@ export default function Pathfinder() {
   }
   const subActiveCells = new Set(Object.keys(subLabels));
 
+  const nextIdx = Math.min(Math.max(stepIdx + dir, 0), last);
+  const nextStep = current.cells[nextIdx];
+  let Arrow: IconType | null = null;
+  if (nextStep) {
+    if (nextStep.y > step.y) Arrow = FiArrowDown;
+    else if (nextStep.y < step.y) Arrow = FiArrowUp;
+    else if (nextStep.x > step.x) Arrow = FiArrowRight;
+    else if (nextStep.x < step.x) Arrow = FiArrowLeft;
+  }
+  const colorCode = hexToDmcCode(current.color);
+  const displayGrid = (showFullGrid
+    ? pattern.grid
+    : pattern.grid.map((row, y) =>
+        row.map((col, x) => (activeCells.has(`${y}-${x}`) ? col : null)),
+      )) as unknown as string[][];
+
   return (
     <Box minH="100vh" minW="100vw" display="flex" flexDirection="column">
       <Box flex="1" p={4} textAlign="center">
         <Heading size="md" mb={4}>
           Pathfinder
         </Heading>
+        <Flex justify="center" align="center" mb={2} gap={4}>
+          <Flex align="center">
+            <Box
+              w="24px"
+              h="24px"
+              border="1px solid #ccc"
+              bg={current.color}
+              mr={2}
+            />
+            <Text>{colorCode ? `#${colorCode}` : current.color}</Text>
+          </Flex>
+          {Arrow && (
+            <Box as={Arrow} aria-label="next direction" />
+          )}
+        </Flex>
+        <FormControl
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          mb={2}
+        >
+          <FormLabel htmlFor="full-toggle" mb="0">
+            Show full image
+          </FormLabel>
+          <Switch
+            id="full-toggle"
+            isChecked={showFullGrid}
+            onChange={(e) => setShowFullGrid(e.target.checked)}
+          />
+        </FormControl>
         <Grid
-          grid={pattern.grid}
+          grid={displayGrid}
           showGrid={true}
           activeColor={current.color}
           activeCell={step}
