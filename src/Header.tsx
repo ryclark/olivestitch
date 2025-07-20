@@ -11,10 +11,11 @@ import {
   ModalContent,
   useDisclosure,
 } from '@chakra-ui/react';
+import { FiUser } from 'react-icons/fi';
 import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
 import { useNavigate } from 'react-router-dom';
-import logo from './images/logo.webp';
-
+//import logo from './images/logo.webp';
+import logo from './images/logo2.webp';
 
 export default function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -27,14 +28,14 @@ export default function Header() {
   }, [user, onClose]);
 
   return (
-    <Box as="header" position="sticky" width="100%" top="0" zIndex="docked" bg="teal.800" boxShadow="sm">
+    <Box as="header" position="sticky" width="100%" top="0" zIndex="docked" bg="green.900" boxShadow="sm">
       <Flex align="center" minW="960px" width="100%" maxW="960px" mx="auto" p={2}>
         <Image src={logo} alt="SnapStitch logo" boxSize="50px" borderRadius="md" mr={3} />
         <Heading
           size="xl"
           fontFamily="'Playfair Display SC', serif"
           letterSpacing="tight"
-          color="teal.100"
+          color="yellow.100"
           textTransform="none"
         >
           Olive{' '}
@@ -47,12 +48,25 @@ export default function Header() {
         {user && (
           <>
             <Button
-              colorScheme="teal"
+              bg="yellow.100" 
+              color="green.900" 
+              _hover={{ bg: "green.900", color: "yellow.100", borderColor: "yellow.100"}}
               size="sm"
               mr={2}
               onClick={() => navigate('/projects')}
             >
-              My Projects
+              <FiUser fontSize="1.2rem" />
+            </Button>
+
+            <Button
+              bg="yellow.100" 
+              color="green.900" 
+              _hover={{ bg: "green.900", color: "yellow.100", borderColor: "yellow.100"}}
+              size="sm"
+              mr={2}
+              onClick={() => navigate('/projects')}
+            >
+              My Projects 
             </Button>
             <Button
               colorScheme="teal"
