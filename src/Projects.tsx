@@ -18,7 +18,12 @@ import {
   PopoverBody,
   IconButton,
   Heading,
-  Flex
+  Flex,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  useBreakpointValue
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthenticator } from '@aws-amplify/ui-react';
@@ -29,7 +34,7 @@ import ImportWizard from './ImportWizard';
 import type { PatternDetails } from './types';
 import { saveProject } from './utils';
 import { estimateTimeRange } from './timeEstimator';
-import { FiInfo, FiTrash2 } from 'react-icons/fi';
+import { FiInfo, FiTrash2, FiChevronDown } from 'react-icons/fi';
 
 
 const client = generateClient<Schema>();
@@ -43,6 +48,71 @@ interface ProjectRecord {
   pattern: string;
   progress: string[];
   createdAt?: string;
+}
+
+interface ProjectActionsProps {
+  continueLabel: string;
+  onContinue: () => void;
+  onShoppingList: () => void;
+  onDelete: () => void;
+}
+
+function ProjectActions({
+  continueLabel,
+  onContinue,
+  onShoppingList,
+  onDelete
+}: ProjectActionsProps) {
+  const useMenu = useBreakpointValue({ base: true, md: false });
+
+  if (useMenu) {
+    return (
+      <Menu>
+        <MenuButton
+          as={Button}
+          size="sm"
+          bg="green.900"
+          color="yellow.100"
+          rightIcon={<FiChevronDown />}
+        >
+          Project Actions
+        </MenuButton>
+        <MenuList>
+          <MenuItem onClick={onContinue}>{continueLabel}</MenuItem>
+          <MenuItem onClick={onShoppingList}>Shopping List</MenuItem>
+          <MenuItem icon={<FiTrash2 />} onClick={onDelete}>
+            Delete
+          </MenuItem>
+        </MenuList>
+      </Menu>
+    );
+  }
+
+  return (
+    <>
+      <Button
+        size="sm"
+        bg="green.900"
+        color="yellow.100"
+        mr={2}
+        onClick={onContinue}
+      >
+        {continueLabel}
+      </Button>
+      <Button
+        size="sm"
+        bg="green.900"
+        color="yellow.100"
+        mr={2}
+        onClick={onShoppingList}
+      >
+        Shopping List
+      </Button>
+      <Button size="sm" colorScheme="red" onClick={onDelete}>
+        <FiTrash2 />
+      </Button>
+    </>
+  );
 }
 
 export default function Projects() {
@@ -281,35 +351,18 @@ export default function Projects() {
                   </Box>
                 </Td>
                 <Td>
-                  <Button
-                    size="sm"
-                    bg="green.900"
-                    color="yellow.100"
-                    mr={2}
-                    onClick={() =>
-                      navigate('/deep-dive', { state: { pattern, progress: p.progress, id: p.id } })
+                  <ProjectActions
+                    continueLabel="Continue"
+                    onContinue={() =>
+                      navigate('/deep-dive', {
+                        state: { pattern, progress: p.progress, id: p.id }
+                      })
                     }
-                  >
-                    Continue
-                  </Button>
-                  <Button
-                    size="sm"
-                    bg="green.900"
-                    color="yellow.100"
-                    mr={2}
-                    onClick={() =>
+                    onShoppingList={() =>
                       navigate('/shopping-list', { state: { pattern } })
                     }
-                  >
-                    Shopping List
-                  </Button>
-                  <Button
-                    size="sm"
-                    colorScheme="red"
-                    onClick={() => deleteProject(p)}
-                  >
-                    <FiTrash2 />
-                  </Button>
+                    onDelete={() => deleteProject(p)}
+                  />
                 </Td>
               </Tr>
             );
@@ -414,36 +467,19 @@ export default function Projects() {
                         Time Remaining: {remainingEst}
                       </Box>
                     </Td>
-                    <Td>
-                      <Button
-                        size="sm"
-                        bg="green.900"
-                        color="yellow.100"
-                        mr={2}
-                        onClick={() =>
-                          navigate('/deep-dive', { state: { pattern, progress: p.progress, id: p.id } })
-                        }
-                      >
-                        Revisit
-                      </Button>
-                      <Button
-                        size="sm"
-                        bg="green.900"
-                        color="yellow.100"
-                        mr={2}
-                        onClick={() =>
+                      <Td>
+                        <ProjectActions
+                          continueLabel="Revisit"
+                          onContinue={() =>
+                            navigate('/deep-dive', {
+                              state: { pattern, progress: p.progress, id: p.id }
+                            })
+                          }
+                        onShoppingList={() =>
                           navigate('/shopping-list', { state: { pattern } })
                         }
-                      >
-                        Shopping List
-                      </Button>
-                      <Button
-                        size="sm"
-                        colorScheme="red"
-                        onClick={() => deleteProject(p)}
-                      >
-                        <FiTrash2 />
-                      </Button>
+                        onDelete={() => deleteProject(p)}
+                      />
                     </Td>
                   </Tr>
                 );
