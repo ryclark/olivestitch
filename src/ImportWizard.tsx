@@ -194,8 +194,25 @@ export default function ImportWizard({
     handleDrag(e.clientX, e.clientY);
   }, [handleDrag]);
 
+  const handleTouchMoveWindow = useCallback(
+    (e: TouchEvent) => {
+      if (e.touches[0]) {
+        handleDrag(e.touches[0].clientX, e.touches[0].clientY);
+        if (dragRef.current) e.preventDefault();
+      }
+    },
+    [handleDrag]
+  );
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     handleDrag(e.clientX, e.clientY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches[0]) {
+      handleDrag(e.touches[0].clientX, e.touches[0].clientY);
+      e.preventDefault();
+    }
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -203,14 +220,26 @@ export default function ImportWizard({
     window.addEventListener('mousemove', handleMouseMoveWindow);
   };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches[0]) {
+      dragRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, start: offset };
+      window.addEventListener('touchmove', handleTouchMoveWindow, { passive: false });
+    }
+  };
+
   useEffect(() => {
     const handleUp = () => {
       dragRef.current = null;
-        window.removeEventListener('mousemove', handleMouseMoveWindow);
-      };
-      window.addEventListener('mouseup', handleUp);
-      return () => window.removeEventListener('mouseup', handleUp);
-    }, [handleMouseMoveWindow]);
+      window.removeEventListener('mousemove', handleMouseMoveWindow);
+      window.removeEventListener('touchmove', handleTouchMoveWindow);
+    };
+    window.addEventListener('mouseup', handleUp);
+    window.addEventListener('touchend', handleUp);
+    return () => {
+      window.removeEventListener('mouseup', handleUp);
+      window.removeEventListener('touchend', handleUp);
+    };
+  }, [handleMouseMoveWindow, handleTouchMoveWindow]);
 
   useEffect(() => {
     const prev = scaleRef.current;
@@ -577,6 +606,9 @@ export default function ImportWizard({
               cursor='move'
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              style={{ touchAction: 'none' }}
             >
               <img
                 src={img.src}
