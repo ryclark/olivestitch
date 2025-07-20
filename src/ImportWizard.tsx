@@ -323,14 +323,54 @@ export default function ImportWizard({
         maxHeight="90vh"
         overflowY="auto"
       >
+
+{/* Mobile-friendly heading for current step */}
+  <Box display={{ base: 'flex', md: 'none' }} alignItems="center" mb={4} gap={3}>
+    <Box
+    display={{ base: 'flex', md: 'none' }}
+    alignItems="center"
+    gap={3}
+    mb={4}
+    px={4}
+    py={2}
+    bg="green.900"
+    color="yellow.100"
+    borderRadius="md"
+    width="calc(100% + 2rem)"  // compensate for parent Box p={4}
+  >
+    <Box
+      borderRadius="full"
+      w="32px"
+      h="32px"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      fontWeight="bold"
+      bg="yellow.100"
+      color="green.900"
+    >
+      {step + 1}
+    </Box>
+    <Box>
+      <Text fontWeight="bold" fontSize="md">{steps[step].title}</Text>
+      <Text fontSize="sm" opacity={0.8}>{steps[step].description}</Text>
+    </Box>
+  </Box>
+
+</Box>
+
+<Box display={{ base: 'none', md: 'block' }} mb={4}>
+  <Box bg="green.900" color="yellow.100" borderRadius="md" p={4}>
         <Stepper
           index={step}
           mb={4}
           size='sm'
-          colorScheme='green'
+          colorScheme='yellow'
           orientation={stepOrientation}
           height={stepOrientation === 'vertical' ? '240px' : 'auto'}
+          display={{ base: 'none', md: 'flex' }}
         >
+
           {steps.map((s, i) => (
             <Step key={i}>
               <StepIndicator>
@@ -338,17 +378,18 @@ export default function ImportWizard({
               </StepIndicator>
               <Box flexShrink='0'>
                 <StepTitle>{s.title}</StepTitle>
-                <StepDescription>{s.description}</StepDescription>
+                <StepDescription><Text color="yellow.100" fontSize="sm">{s.description}</Text></StepDescription>
               </Box>
               <StepSeparator />
             </Step>
           ))}
         </Stepper>
-
+  </Box>
+</Box>
         {step === 0 && (
           <Box>
             <Flex
-              justify='flex-end'
+              justify='space-between'
               mb={2}
               display={{ base: 'flex', md: 'none' }}
               position='sticky'
@@ -408,7 +449,7 @@ export default function ImportWizard({
                 {fabricCount} × {fabricCount} = {fabricCount * fabricCount} stitches per square inch
               </Text>
             </Box>
-            <Flex justify='flex-end' display={{ base: 'none', md: 'flex' }}>
+            <Flex justify='space-between' display={{ base: 'none', md: 'flex' }}>
               <Button mr={2} onClick={onCancel}>Cancel</Button>
               <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
             </Flex>
