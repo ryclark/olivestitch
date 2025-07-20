@@ -66,6 +66,7 @@ export default function ImportWizard({
   const containerSize = Math.min(maxGridPx, 700);
   // Outer modal width keeps a small margin around the image area
   const modalWidth = containerSize + 40;
+  const sliderWidth = containerSize / 2;
 
   const [step, setStep] = useState<number>(0); // 0-based index
   const [fabricCount, setFabricCount] = useState<number>(14);
@@ -301,7 +302,7 @@ export default function ImportWizard({
         maxHeight="90vh"
         overflowY="auto"
       >
-        <Stepper index={step} mb={4} size='sm'>
+        <Stepper index={step} mb={4} size='sm' colorScheme='green'>
           {steps.map((s, i) => (
             <Step key={i}>
               <StepIndicator>
@@ -500,7 +501,16 @@ export default function ImportWizard({
               />
             </Box>
             <Box mt={2} textAlign='center'>
-              <Slider min={minScale} max={initialScale * 3} step={0.1} value={scale} onChange={setScale}>
+              <Slider
+                size='lg'
+                width={`${sliderWidth}px`}
+                colorScheme='green'
+                min={minScale}
+                max={initialScale * 3}
+                step={0.1}
+                value={scale}
+                onChange={setScale}
+              >
                 <SliderTrack>
                   <SliderFilledTrack />
                 </SliderTrack>
@@ -527,7 +537,15 @@ export default function ImportWizard({
               maxGridPx={containerSize}
             />
             <Box mt={2} px={2}>
-              <Slider min={1} max={maxColors} value={reduceTo} onChange={handleReduceChange}>
+              <Slider
+                size='lg'
+                width={`${sliderWidth}px`}
+                colorScheme='green'
+                min={1}
+                max={maxColors}
+                value={reduceTo}
+                onChange={handleReduceChange}
+              >
                 <SliderTrack>
                   <SliderFilledTrack />
                 </SliderTrack>
@@ -537,19 +555,41 @@ export default function ImportWizard({
                 <UsedColors colors={Object.keys(colorUsage)} usage={colorUsage} />
               </Collapsible>
               {user && (
-                <FormControl display='flex' alignItems='center' justifyContent='center' mt={2}>
-                  <FormLabel htmlFor='floss-toggle' mb='0'>Use my floss box</FormLabel>
-                  <Switch id='floss-toggle' isChecked={showMine} onChange={e => setShowMine(e.target.checked)} />
-                </FormControl>
+                <Box textAlign='center' mt={2}>
+                  <FormControl display='flex' alignItems='center' justifyContent='center'>
+                    <FormLabel htmlFor='floss-toggle' mb='0'>Use my floss box</FormLabel>
+                    <Switch
+                      id='floss-toggle'
+                      colorScheme='green'
+                      isChecked={showMine}
+                      onChange={e => setShowMine(e.target.checked)}
+                      isDisabled={floss.length === 0}
+                    />
+                  </FormControl>
+                  {floss.length === 0 && (
+                    <Text fontSize='sm' mt={1}>
+                      Add any floss you currently have to create a design limited to your current gear.
+                    </Text>
+                  )}
+                </Box>
               )}
               <ColorPalette
                 selected={selectedColor}
                 setSelected={setSelectedColor}
                 colors={showMine ? flossPalette : DMC_COLORS}
               />
-              <FormControl mt={4}>
+              <FormControl mt={4} textAlign='center'>
                 <FormLabel textAlign='center'>Confetti Level: {confetti}</FormLabel>
-                <Slider min={1} max={10} step={1} value={confetti} onChange={setConfetti}>
+                <Slider
+                  size='lg'
+                  width={`${sliderWidth}px`}
+                  colorScheme='green'
+                  min={1}
+                  max={10}
+                  step={1}
+                  value={confetti}
+                  onChange={setConfetti}
+                >
                   <SliderTrack>
                     <SliderFilledTrack />
                   </SliderTrack>
