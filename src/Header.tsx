@@ -13,6 +13,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  MenuDivider,
   useDisclosure,
 } from '@chakra-ui/react';
 import { FiUser } from 'react-icons/fi';
@@ -87,6 +88,7 @@ export default function Header() {
               >
                 Floss Box
               </MenuItem>
+              
               <MenuItem
                 bg="yellow.100"
                 _hover={{ bg: 'green.900', color: 'yellow.100' }}
@@ -96,6 +98,7 @@ export default function Header() {
               >
                 My Account
               </MenuItem>
+              <MenuDivider /> 
               <MenuItem
                 bg="yellow.100"
                 _hover={{ bg: 'green.900', color: 'yellow.100' }}
