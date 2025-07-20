@@ -63,7 +63,7 @@ function ProjectActions({
   onShoppingList,
   onDelete
 }: ProjectActionsProps) {
-  const useMenu = useBreakpointValue({ base: true, md: false });
+  const useMenu = useBreakpointValue({ base: true, md: true });
 
   if (useMenu) {
     return (
