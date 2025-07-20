@@ -1,5 +1,13 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { Box, Grid as ChakraGrid, Button, Switch, FormControl, FormLabel } from '@chakra-ui/react';
+import {
+  Box,
+  Grid as ChakraGrid,
+  Button,
+  Switch,
+  FormControl,
+  FormLabel,
+  Heading,
+} from '@chakra-ui/react';
 import UsedColors from './UsedColors';
 import { getColorUsage } from './utils';
 import { DMC_COLORS } from './ColorPalette';
@@ -176,54 +184,65 @@ export default function DeepDive() {
         }}
         alignItems="flex-start"
       >
-        <Box gridArea="large" w="100%" maxW={`${gridWidth}px`} position="relative" height={gridHeight} flexShrink={0} overflow="hidden">
-          <StitchGrid
-            grid={grid}
-            setGrid={() => {}}
-            selectedColor={null}
-            showGrid={true}
-            maxGridPx={maxGridPx}
-            completedCells={completedCells}
-            symbolMap={pattern.symbols}
-            showSymbols={false}
-          />
-          <Box position="absolute" top={0} left={0} right={0} bottom={0}>
-            {overlays}
-          </Box>
-          {active && (
-            <Box
-              pointerEvents="none"
-              position="absolute"
-              left={active.x * inchPx}
-              top={active.y * inchPx}
-              width={active.w}
-              height={active.h}
-              boxShadow="0 0 0 9999px rgba(0,0,0,0.5)"
-              border="2px solid teal"
+        <Box gridArea="large" w="100%">
+          <Heading size="md" mb={2}>
+            Pattern Map
+          </Heading>
+          <Box position="relative" height={gridHeight} flexShrink={0} overflow="hidden">
+            <StitchGrid
+              grid={grid}
+              setGrid={() => {}}
+              selectedColor={null}
+              showGrid={true}
+              maxGridPx={maxGridPx}
+              completedCells={completedCells}
+              symbolMap={pattern.symbols}
+              showSymbols={false}
             />
-          )}
+            <Box position="absolute" top={0} left={0} right={0} bottom={0}>
+              {overlays}
+            </Box>
+            {active && (
+              <Box
+                pointerEvents="none"
+                position="absolute"
+                left={active.x * inchPx}
+                top={active.y * inchPx}
+                width={active.w}
+                height={active.h}
+                boxShadow="0 0 0 9999px rgba(0,0,0,0.5)"
+                border="2px solid teal"
+              />
+            )}
+          </Box>
         </Box>
         {active && (
           <>
-            <Box gridArea="section" w="100%" maxW={`${subGridWidth}px`}>
+            <Box gridArea="section" w="100%">
+              <Heading size="md" mb={2}>
+                Section View
+              </Heading>
               <StitchGrid
-              grid={subGrid || []}
-              setGrid={() => {}}
-              selectedColor={null}
-            showGrid={true}
-            maxGridPx={subMaxPx}
-            activeCell={focusedCell}
-            activeColor={focusedColor}
-            markComplete={sectionComplete}
-            symbolMap={pattern.symbols}
-            showSymbols={showSymbols}
-              onCellClick={(_, __, color) => {
-                setFocusedCell(null);
-                setFocusedColor(prev => (prev === color ? prev : color));
-              }}
-            />
+                grid={subGrid || []}
+                setGrid={() => {}}
+                selectedColor={null}
+                showGrid={true}
+                maxGridPx={subMaxPx}
+                activeCell={focusedCell}
+                activeColor={focusedColor}
+                markComplete={sectionComplete}
+                symbolMap={pattern.symbols}
+                showSymbols={showSymbols}
+                onCellClick={(_, __, color) => {
+                  setFocusedCell(null);
+                  setFocusedColor(prev => (prev === color ? prev : color));
+                }}
+              />
             </Box>
-            <Box gridArea="colors" mt={2} w="100%" maxW={`${subGridWidth}px`}>
+            <Box gridArea="colors" mt={2} w="100%">
+              <Heading size="md" mb={2}>
+                Details & Actions
+              </Heading>
               <UsedColors
                 colors={Object.keys(colorUsage)}
                 usage={colorUsage}
