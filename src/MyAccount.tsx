@@ -11,18 +11,41 @@ import {
   Button,
   VStack,
 } from '@chakra-ui/react';
-import { Auth } from 'aws-amplify';
+import {
+  updatePassword,
+  deleteUser,
+  fetchUserAttributes,
+  type FetchUserAttributesOutput,
+} from 'aws-amplify/auth';
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import { useEffect, useState } from 'react';
 
 export default function MyAccount() {
   const { user } = useAuthenticator(ctx => [ctx.user]);
+  const [attributes, setAttributes] = useState<FetchUserAttributesOutput | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const loadAttributes = async () => {
+      try {
+        const attrs = await fetchUserAttributes();
+        setAttributes(attrs);
+      } catch {
+        setAttributes(null);
+      }
+    };
+    if (user) {
+      loadAttributes();
+    }
+  }, [user]);
 
   const handleChangePassword = async () => {
     const oldPassword = window.prompt('Current password');
     const newPassword = window.prompt('New password');
     if (oldPassword && newPassword) {
       try {
-        await Auth.changePassword(user, oldPassword, newPassword);
+        await updatePassword({ oldPassword, newPassword });
         window.alert('Password updated');
       } catch (err) {
         window.alert('Failed to change password');
@@ -33,7 +56,7 @@ export default function MyAccount() {
   const handleDeleteAccount = async () => {
     if (!window.confirm('Delete your account? This action cannot be undone.')) return;
     try {
-      await Auth.deleteUser();
+      await deleteUser();
     } catch (err) {
       window.alert('Failed to delete account');
     }
@@ -56,15 +79,15 @@ export default function MyAccount() {
             <VStack spacing={4} align="stretch">
               <FormControl>
                 <FormLabel>Given Name</FormLabel>
-                <Input value={user.attributes?.given_name ?? ''} isReadOnly />
+                <Input value={attributes?.given_name ?? ''} isReadOnly />
               </FormControl>
               <FormControl>
                 <FormLabel>Family Name</FormLabel>
-                <Input value={user.attributes?.family_name ?? ''} isReadOnly />
+                <Input value={attributes?.family_name ?? ''} isReadOnly />
               </FormControl>
               <FormControl>
                 <FormLabel>Email</FormLabel>
-                <Input value={user.attributes?.email ?? ''} isReadOnly />
+                <Input value={attributes?.email ?? ''} isReadOnly />
               </FormControl>
               <Button alignSelf="flex-start" bg="green.900" color="yellow.100" onClick={handleChangePassword}>
                 Change Password
