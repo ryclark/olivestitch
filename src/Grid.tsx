@@ -23,6 +23,8 @@ export interface GridProps {
   completedCells?: Set<string> | null;
   /** Specific cells to keep active when activeColor is set */
   activeCells?: Set<string> | null;
+  /** Optional labels for specific cells keyed by "y-x" */
+  labels?: Record<string, string> | null;
   symbolMap?: Record<string, string> | null;
   showSymbols?: boolean;
 }
@@ -39,6 +41,7 @@ export default function Grid({
   markComplete = false,
   completedCells = null,
   activeCells = null,
+  labels = null,
   symbolMap = null,
   showSymbols = false,
 }: GridProps) {
@@ -103,6 +106,7 @@ export default function Grid({
               boxSizing="border-box"
               cursor="pointer"
               opacity={dimmed ? 0.3 : 1}
+              position="relative"
               display="flex"
               alignItems="center"
               justifyContent="center"
@@ -117,6 +121,17 @@ export default function Grid({
               title={dmcLabel}
             >
               {isComplete ? "X" : symbol}
+              {labels && labels[cellKey] && (
+                <Box
+                  position="absolute"
+                  top={0}
+                  left={1}
+                  fontSize="xs"
+                  color="#000"
+                >
+                  {labels[cellKey]}
+                </Box>
+              )}
             </Box>
           );
         }),
