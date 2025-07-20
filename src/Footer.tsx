@@ -83,7 +83,7 @@ export default function Footer() {
       <DrawerCloseButton />
       <DrawerHeader>Terms of Use</DrawerHeader>
       <DrawerBody>
-        <Text mb={4}>Effective Date: [Insert Date Here]</Text>
+        <Text mb={4}>Effective Date: July 19, 2025</Text>
         <Text mb={4}>
           Welcome to Olive &amp; Thread, operated by Olive Industries LLC ("we,"
           "us," or "our"). These Terms of Use ("Terms") govern your use of the
@@ -159,7 +159,7 @@ export default function Footer() {
       <DrawerCloseButton />
       <DrawerHeader>Privacy Policy</DrawerHeader>
       <DrawerBody>
-        <Text mb={4}>Effective Date: [Insert Date Here]</Text>
+        <Text mb={4}>Effective Date: July 19, 2025</Text>
         <Text mb={4}>
           Olive Industries LLC ("we," "us," or "our") respects your privacy. This
           Privacy Policy describes how we collect, use, and share information when
