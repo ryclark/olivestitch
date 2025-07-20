@@ -369,7 +369,7 @@ export default function ImportWizard({
             </Box>
             <Flex justify='flex-end'>
               <Button mr={2} onClick={onCancel}>Cancel</Button>
-              <Button colorScheme='teal' onClick={handleNext}>Next</Button>
+              <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
             </Flex>
           </Box>
         )}
@@ -454,7 +454,7 @@ export default function ImportWizard({
             </Box>
             <Flex justify='space-between' mt={4}>
               <Button onClick={prevStep}>Back</Button>
-              <Button colorScheme='teal' onClick={handleNext}>Next</Button>
+              <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
             </Flex>
           </Box>
         )}
@@ -512,7 +512,7 @@ export default function ImportWizard({
             </Text>
             <Flex justify='space-between' mt={4}>
               <Button onClick={prevStep}>Back</Button>
-              <Button colorScheme='teal' onClick={handleNext}>Next</Button>
+              <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
             </Flex>
           </Box>
         )}
@@ -559,7 +559,7 @@ export default function ImportWizard({
             </Box>
             <Flex justify='space-between' mt={4}>
               <Button onClick={prevStep}>Back</Button>
-              <Button colorScheme='teal' onClick={handleNext}>Next</Button>
+              <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
             </Flex>
           </Box>
         )}
@@ -567,7 +567,7 @@ export default function ImportWizard({
         {step === 4 && (
           <Box textAlign='center'>
             <Text mb={4}>All set! Use this image?</Text>
-            <Button colorScheme='teal' mr={2} onClick={handleFinish}>Use Image</Button>
+            <Button bg='green.900' color='yellow.100' mr={2} onClick={handleFinish}>Use Image</Button>
             <Button onClick={onCancel}>Cancel</Button>
           </Box>
         )}

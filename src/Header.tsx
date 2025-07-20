@@ -77,7 +77,7 @@ export default function Header() {
             </MenuList>
           </Menu>
         ) : (
-          <Button colorScheme="teal" size="sm" onClick={onOpen}>
+          <Button bg="green.900" color="yellow.100" size="sm" onClick={onOpen}>
             Join or Sign in
           </Button>
         )}

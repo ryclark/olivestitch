@@ -213,7 +213,8 @@ export default function App() {
             />
             <Button
               size="lg"
-              colorScheme="teal"
+              bg="green.900"
+              color="yellow.100"
               onClick={() => setShowImageOptions(true)}
             >
               Try it out!
@@ -244,10 +245,10 @@ export default function App() {
               />
             </FormControl>
             <Box mt={4}>
-              <Button colorScheme="teal" mr={2} onClick={onOpen}>
+              <Button bg="green.900" color="yellow.100" mr={2} onClick={onOpen}>
                 Pattern Details
               </Button>
-              <Button colorScheme="teal" onClick={handleDeepDive}>
+              <Button bg="green.900" color="yellow.100" onClick={handleDeepDive}>
                 Deep Dive
               </Button>
             </Box>

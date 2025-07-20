@@ -28,7 +28,7 @@ import ImportWizard from './ImportWizard';
 import type { PatternDetails } from './types';
 import { saveProject } from './utils';
 import { estimateTimeRange } from './timeEstimator';
-import { FiInfo } from "react-icons/fi";
+import { FiInfo, FiTrash2 } from 'react-icons/fi';
 
 
 const client = generateClient<Schema>();
@@ -169,7 +169,7 @@ export default function Projects() {
         ref={fileInputRef}
         onChange={e => handleImageUpload(e.target.files ? e.target.files[0] : null)}
       />
-      <Button mb={4} colorScheme="teal" onClick={openFileDialog}>
+      <Button mb={4} bg="green.900" color="yellow.100" onClick={openFileDialog}>
         New Project
       </Button>
       {importImage && (
@@ -277,7 +277,8 @@ export default function Projects() {
                 <Td>
                   <Button
                     size="sm"
-                    colorScheme="teal"
+                    bg="green.900"
+                    color="yellow.100"
                     mr={2}
                     onClick={() =>
                       navigate('/deep-dive', { state: { pattern, progress: p.progress, id: p.id } })
@@ -287,7 +288,8 @@ export default function Projects() {
                   </Button>
                   <Button
                     size="sm"
-                    colorScheme="blue"
+                    bg="green.900"
+                    color="yellow.100"
                     mr={2}
                     onClick={() =>
                       navigate('/shopping-list', { state: { pattern } })
@@ -300,7 +302,7 @@ export default function Projects() {
                     colorScheme="red"
                     onClick={() => deleteProject(p)}
                   >
-                    Delete
+                    <FiTrash2 />
                   </Button>
                 </Td>
               </Tr>
@@ -409,7 +411,8 @@ export default function Projects() {
                     <Td>
                       <Button
                         size="sm"
-                        colorScheme="teal"
+                        bg="green.900"
+                        color="yellow.100"
                         mr={2}
                         onClick={() =>
                           navigate('/deep-dive', { state: { pattern, progress: p.progress, id: p.id } })
@@ -419,7 +422,8 @@ export default function Projects() {
                       </Button>
                       <Button
                         size="sm"
-                        colorScheme="blue"
+                        bg="green.900"
+                        color="yellow.100"
                         mr={2}
                         onClick={() =>
                           navigate('/shopping-list', { state: { pattern } })
@@ -432,7 +436,7 @@ export default function Projects() {
                         colorScheme="red"
                         onClick={() => deleteProject(p)}
                       >
-                        Delete
+                        <FiTrash2 />
                       </Button>
                     </Td>
                   </Tr>

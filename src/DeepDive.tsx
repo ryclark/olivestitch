@@ -153,7 +153,7 @@ export default function DeepDive() {
 
   return (
     <Box p={4}>
-      <Button mb={4} onClick={() => navigate(-1)} colorScheme="teal">
+      <Button mb={4} onClick={() => navigate(-1)} bg="green.900" color="yellow.100">
         Back
       </Button>
       <FormControl display="flex" alignItems="center" mb={4} width="fit-content">
@@ -227,7 +227,8 @@ export default function DeepDive() {
               {selected && (
                 <Button
                   mt={2}
-                  colorScheme="teal"
+                  bg="green.900"
+                  color="yellow.100"
                   onClick={() => {
                     if (!selected) return;
                     const keys = getSectionKeys(selected);
