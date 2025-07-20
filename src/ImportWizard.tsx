@@ -27,7 +27,8 @@ import {
   StepDescription,
   StepSeparator,
   Text,
-  type ChakraProps
+  type ChakraProps,
+  useBreakpointValue
 } from '@chakra-ui/react';
 
 const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
@@ -63,7 +64,21 @@ export default function ImportWizard({
   onComplete
 }: ImportWizardProps) {
   // Limit the preview/crop area so the wizard modal stays usable on large screens
-  const containerSize = Math.min(maxGridPx, 700);
+  // and adjust for small viewports
+  const [containerSize, setContainerSize] = useState(() =>
+    Math.min(maxGridPx, 700)
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      const vw = window.innerWidth;
+      const limit = 0.45 * vw - 40;
+      setContainerSize(Math.min(maxGridPx, 700, Math.max(100, limit)));
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [maxGridPx]);
   // Outer modal width keeps a small margin around the image area
   const modalWidth = containerSize + 40;
   const sliderWidth = containerSize / 2;
@@ -291,6 +306,12 @@ export default function ImportWizard({
     zIndex: 1000
   };
 
+  const stepOrientation =
+    useBreakpointValue<'horizontal' | 'vertical'>({
+      base: 'vertical',
+      md: 'horizontal'
+    }) ?? 'horizontal';
+
   return (
     <Box {...overlayProps}>
       <Box
@@ -302,7 +323,14 @@ export default function ImportWizard({
         maxHeight="90vh"
         overflowY="auto"
       >
-        <Stepper index={step} mb={4} size='sm' colorScheme='green'>
+        <Stepper
+          index={step}
+          mb={4}
+          size='sm'
+          colorScheme='green'
+          orientation={stepOrientation}
+          height={stepOrientation === 'vertical' ? '240px' : 'auto'}
+        >
           {steps.map((s, i) => (
             <Step key={i}>
               <StepIndicator>
@@ -319,6 +347,18 @@ export default function ImportWizard({
 
         {step === 0 && (
           <Box>
+            <Flex
+              justify='flex-end'
+              mb={2}
+              display={{ base: 'flex', md: 'none' }}
+              position='sticky'
+              top={0}
+              bg='white'
+              zIndex={1}
+            >
+              <Button mr={2} onClick={onCancel}>Cancel</Button>
+              <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
+            </Flex>
             <Select value={fabricCount} onChange={e => setFabricCount(Number(e.target.value))} mb={2}>
               <option value={11}>11-count Aida</option>
               <option value={14}>14-count Aida</option>
@@ -368,7 +408,7 @@ export default function ImportWizard({
                 {fabricCount} × {fabricCount} = {fabricCount * fabricCount} stitches per square inch
               </Text>
             </Box>
-            <Flex justify='flex-end'>
+            <Flex justify='flex-end' display={{ base: 'none', md: 'flex' }}>
               <Button mr={2} onClick={onCancel}>Cancel</Button>
               <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
             </Flex>
@@ -377,6 +417,18 @@ export default function ImportWizard({
 
         {step === 1 && (
           <Box>
+            <Flex
+              justify='space-between'
+              mb={2}
+              display={{ base: 'flex', md: 'none' }}
+              position='sticky'
+              top={0}
+              bg='white'
+              zIndex={1}
+            >
+              <Button onClick={prevStep}>Back</Button>
+              <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
+            </Flex>
             <Flex gap={2} mb={2} align='center' flexDir={{ base: 'column', sm: 'row' }}>
               <FormControl isInvalid={widthIn < 2}>
                 <FormLabel>Width (inches)</FormLabel>
@@ -453,7 +505,7 @@ export default function ImportWizard({
                 />
               </Box>
             </Box>
-            <Flex justify='space-between' mt={4}>
+            <Flex justify='space-between' mt={4} display={{ base: 'none', md: 'flex' }}>
               <Button onClick={prevStep}>Back</Button>
               <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
             </Flex>
@@ -462,6 +514,18 @@ export default function ImportWizard({
 
         {step === 2 && (
           <Box>
+            <Flex
+              justify='space-between'
+              mb={2}
+              display={{ base: 'flex', md: 'none' }}
+              position='sticky'
+              top={0}
+              bg='white'
+              zIndex={1}
+            >
+              <Button onClick={prevStep}>Back</Button>
+              <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
+            </Flex>
             <Box
               position='relative'
               width={cropWidth}
@@ -520,7 +584,7 @@ export default function ImportWizard({
             <Text fontSize='sm' mt={2} textAlign='center'>
               Drag the image so the part inside the grid looks right. Only what you see here will turn into stitches.
             </Text>
-            <Flex justify='space-between' mt={4}>
+            <Flex justify='space-between' mt={4} display={{ base: 'none', md: 'flex' }}>
               <Button onClick={prevStep}>Back</Button>
               <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
             </Flex>
@@ -529,6 +593,18 @@ export default function ImportWizard({
 
         {step === 3 && (
           <Box>
+            <Flex
+              justify='space-between'
+              mb={2}
+              display={{ base: 'flex', md: 'none' }}
+              position='sticky'
+              top={0}
+              bg='white'
+              zIndex={1}
+            >
+              <Button onClick={prevStep}>Back</Button>
+              <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
+            </Flex>
             <Grid
               grid={preview || []}
               setGrid={() => {}}
@@ -573,11 +649,13 @@ export default function ImportWizard({
                   )}
                 </Box>
               )}
-              <ColorPalette
-                selected={selectedColor}
-                setSelected={setSelectedColor}
-                colors={showMine ? flossPalette : DMC_COLORS}
-              />
+              <Collapsible label={<Text textAlign='center'>Palette</Text>}>
+                <ColorPalette
+                  selected={selectedColor}
+                  setSelected={setSelectedColor}
+                  colors={showMine ? flossPalette : DMC_COLORS}
+                />
+              </Collapsible>
               <FormControl mt={4} textAlign='center'>
                 <FormLabel textAlign='center'>Confetti Level: {confetti}</FormLabel>
                 <Slider
@@ -597,7 +675,7 @@ export default function ImportWizard({
                 </Slider>
               </FormControl>
             </Box>
-            <Flex justify='space-between' mt={4}>
+            <Flex justify='space-between' mt={4} display={{ base: 'none', md: 'flex' }}>
               <Button onClick={prevStep}>Back</Button>
               <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
             </Flex>
