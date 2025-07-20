@@ -103,7 +103,7 @@ export default function ShoppingList() {
 
   return (
     <Box p={4} maxW="600px" m="0 auto">
-      <Button mb={4} onClick={() => navigate(-1)} colorScheme="teal">Back</Button>
+      <Button mb={4} onClick={() => navigate(-1)} bg="green.900" color="yellow.100">Back</Button>
       <Heading size="lg" mb={4}>Shopping List</Heading>
       <Box mb={4}>
         <Text fontWeight="bold">Fabric:</Text>
