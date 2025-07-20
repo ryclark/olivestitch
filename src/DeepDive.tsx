@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { Box, Flex, Button, Switch, FormControl, FormLabel } from '@chakra-ui/react';
+import { Box, Grid as ChakraGrid, Button, Switch, FormControl, FormLabel } from '@chakra-ui/react';
 import UsedColors from './UsedColors';
 import { getColorUsage } from './utils';
 import { DMC_COLORS } from './ColorPalette';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../amplify/data/resource';
-import Grid from './Grid';
+import StitchGrid from './Grid';
 import type { PatternDetails } from './types';
 
 const client = generateClient<Schema>();
@@ -166,9 +166,18 @@ export default function DeepDive() {
           onChange={e => setShowSymbols(e.target.checked)}
         />
       </FormControl>
-      <Flex gap={4} flexDir={{ base: 'column', md: 'row' }} align="flex-start">
-        <Box position="relative" width={gridWidth} height={gridHeight} flexShrink={0} overflow="hidden">
-          <Grid
+      <ChakraGrid
+        gap={4}
+        templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+        templateAreas={{
+          base: '"large" "section" "colors"',
+          md: '"large section" "large colors"',
+          lg: '"large section colors"',
+        }}
+        alignItems="flex-start"
+      >
+        <Box gridArea="large" w="100%" maxW={`${gridWidth}px`} position="relative" height={gridHeight} flexShrink={0} overflow="hidden">
+          <StitchGrid
             grid={grid}
             setGrid={() => {}}
             selectedColor={null}
@@ -195,8 +204,9 @@ export default function DeepDive() {
           )}
         </Box>
         {active && (
-          <Box>
-            <Grid
+          <>
+            <Box gridArea="section" w="100%" maxW={`${subGridWidth}px`}>
+              <StitchGrid
               grid={subGrid || []}
               setGrid={() => {}}
               selectedColor={null}
@@ -211,8 +221,9 @@ export default function DeepDive() {
                 setFocusedCell(null);
                 setFocusedColor(prev => (prev === color ? prev : color));
               }}
-          />
-            <Box mt={2} width={`${subGridWidth}px`}>
+            />
+            </Box>
+            <Box gridArea="colors" mt={2} w="100%" maxW={`${subGridWidth}px`}>
               <UsedColors
                 colors={Object.keys(colorUsage)}
                 usage={colorUsage}
@@ -284,9 +295,9 @@ export default function DeepDive() {
                 </Box>
               )}
             </Box>
-          </Box>
+          </>
         )}
-      </Flex>
+      </ChakraGrid>
     </Box>
   );
 }
