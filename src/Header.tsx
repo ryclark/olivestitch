@@ -9,6 +9,10 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
   useDisclosure,
 } from '@chakra-ui/react';
 import { FiUser } from 'react-icons/fi';
@@ -45,42 +49,38 @@ export default function Header() {
           Thread
         </Heading>
         <Spacer />
-        {user && (
-          <>
-            <Button
-              bg="yellow.100" 
-              color="green.900" 
-              _hover={{ bg: "green.900", color: "yellow.100", borderColor: "yellow.100"}}
+        {user ? (
+          <Menu>
+            <MenuButton
+              as={Button}
+              bg="yellow.100"
+              color="green.900"
+              _hover={{ bg: "green.900", color: "yellow.100", borderColor: "yellow.100" }}
               size="sm"
               mr={2}
-              onClick={() => navigate('/projects')}
             >
               <FiUser fontSize="1.2rem" />
-            </Button>
-
-            <Button
-              bg="yellow.100" 
-              color="green.900" 
-              _hover={{ bg: "green.900", color: "yellow.100", borderColor: "yellow.100"}}
-              size="sm"
-              mr={2}
-              onClick={() => navigate('/projects')}
-            >
-              My Projects 
-            </Button>
-            <Button
-              colorScheme="teal"
-              size="sm"
-              mr={2}
-              onClick={() => navigate('/floss-box')}
-            >
-              Floss Box
-            </Button>
-          </>
+            </MenuButton>
+            <MenuList bg="green.900" color="yellow.100" borderColor="yellow.100">
+              <MenuItem bg="green.900" _hover={{ bg: "yellow.100", color: "green.900" }} onClick={() => navigate('/projects')}>
+                Projects
+              </MenuItem>
+              <MenuItem bg="green.900" _hover={{ bg: "yellow.100", color: "green.900" }} onClick={() => navigate('/floss-box')}>
+                Floss Box
+              </MenuItem>
+              <MenuItem bg="green.900" _hover={{ bg: "yellow.100", color: "green.900" }} onClick={() => navigate('/my-account')}>
+                My Account
+              </MenuItem>
+              <MenuItem bg="green.900" _hover={{ bg: "yellow.100", color: "green.900" }} onClick={signOut}>
+                Logout
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        ) : (
+          <Button colorScheme="teal" size="sm" onClick={onOpen}>
+            Join or Sign in
+          </Button>
         )}
-        <Button colorScheme="teal" size="sm" onClick={user ? signOut : onOpen}>
-          {user ? 'Logout' : 'Join or Sign in'}
-        </Button>
       </Flex>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
