@@ -2,8 +2,6 @@ import { useMemo, useState } from "react";
 import { Box, Button, Heading } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Grid from "./Grid";
-import Header from "./Header";
-import Footer from "./Footer";
 import type { PatternDetails } from "./types";
 
 interface Path {
@@ -117,15 +115,26 @@ export default function Pathfinder() {
   if (!pattern) return <Box p={4}>No pattern selected.</Box>;
   if (!current || !step) return <Box p={4}>No path found.</Box>;
 
-  const activeCells = new Set(current.cells.map((c) => `${c.y}-${c.x}`));
+  const activeCells = new Set(
+    current.cells.slice(0, stepIdx + 1).map((c) => `${c.y}-${c.x}`),
+  );
   const size = pattern.fabricCount;
   const subGrid = extractSubGrid(pattern.grid, step, size);
   const half = Math.floor(size / 2);
   const subActive = { y: half, x: half };
+  const subLabels: Record<string, string> = {};
+  for (let i = 0; i <= stepIdx; i++) {
+    const c = current.cells[i];
+    const subY = c.y - (step.y - half);
+    const subX = c.x - (step.x - half);
+    if (subY >= 0 && subY < size && subX >= 0 && subX < size) {
+      subLabels[`${subY}-${subX}`] = String(i + 1);
+    }
+  }
+  const subActiveCells = new Set(Object.keys(subLabels));
 
   return (
     <Box minH="100vh" minW="100vw" display="flex" flexDirection="column">
-      <Header />
       <Box flex="1" p={4} textAlign="center">
         <Heading size="md" mb={4}>
           Pathfinder
@@ -144,7 +153,8 @@ export default function Pathfinder() {
             showGrid={true}
             activeColor={current.color}
             activeCell={subActive}
-            activeCells={new Set([`${subActive.y}-${subActive.x}`])}
+            activeCells={subActiveCells}
+            labels={subLabels}
             maxGridPx={200}
           />
         </Box>
@@ -155,7 +165,6 @@ export default function Pathfinder() {
           Back
         </Button>
       </Box>
-      <Footer />
     </Box>
   );
 }
