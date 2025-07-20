@@ -33,7 +33,13 @@ export default function Header() {
 
   return (
     <Box as="header" position="sticky" width="100%" top="0" zIndex="docked" bg="green.900" boxShadow="sm">
-      <Flex align="center" minW="960px" width="100%" maxW="960px" mx="auto" p={2}>
+      <Flex
+        align="center"
+        justify="space-between"
+        width="100%"
+        px={{ base: 4, md: 8 }}
+        py={2}
+      >
         <Image src={logo} alt="SnapStitch logo" boxSize="50px" borderRadius="md" mr={3} />
         <Heading
           size="xl"
@@ -55,29 +61,60 @@ export default function Header() {
               as={Button}
               bg="yellow.100"
               color="green.900"
-              _hover={{ bg: "green.900", color: "yellow.100", borderColor: "yellow.100" }}
+              _hover={{ bg: 'green.900', color: 'yellow.100', borderColor: 'yellow.100' }}
+              _focus={{ boxShadow: 'none', bg: 'yellow.100' }}
               size="sm"
               mr={2}
             >
               <FiUser fontSize="1.2rem" />
             </MenuButton>
-            <MenuList bg="green.900" color="yellow.100" borderColor="yellow.100">
-              <MenuItem bg="green.900" _hover={{ bg: "yellow.100", color: "green.900" }} onClick={() => navigate('/projects')}>
+            <MenuList bg="yellow.100" color="green.900" borderColor="green.900">
+              <MenuItem
+                bg="yellow.100"
+                _hover={{ bg: 'green.900', color: 'yellow.100' }}
+                _focus={{ bg: 'green.900', color: 'yellow.100' }}
+                _active={{ bg: 'green.900', color: 'yellow.100' }}
+                onClick={() => navigate('/projects')}
+              >
                 Projects
               </MenuItem>
-              <MenuItem bg="green.900" _hover={{ bg: "yellow.100", color: "green.900" }} onClick={() => navigate('/floss-box')}>
+              <MenuItem
+                bg="yellow.100"
+                _hover={{ bg: 'green.900', color: 'yellow.100' }}
+                _focus={{ bg: 'green.900', color: 'yellow.100' }}
+                _active={{ bg: 'green.900', color: 'yellow.100' }}
+                onClick={() => navigate('/floss-box')}
+              >
                 Floss Box
               </MenuItem>
-              <MenuItem bg="green.900" _hover={{ bg: "yellow.100", color: "green.900" }} onClick={() => navigate('/my-account')}>
+              <MenuItem
+                bg="yellow.100"
+                _hover={{ bg: 'green.900', color: 'yellow.100' }}
+                _focus={{ bg: 'green.900', color: 'yellow.100' }}
+                _active={{ bg: 'green.900', color: 'yellow.100' }}
+                onClick={() => navigate('/my-account')}
+              >
                 My Account
               </MenuItem>
-              <MenuItem bg="green.900" _hover={{ bg: "yellow.100", color: "green.900" }} onClick={signOut}>
+              <MenuItem
+                bg="yellow.100"
+                _hover={{ bg: 'green.900', color: 'yellow.100' }}
+                _focus={{ bg: 'green.900', color: 'yellow.100' }}
+                _active={{ bg: 'green.900', color: 'yellow.100' }}
+                onClick={signOut}
+              >
                 Logout
               </MenuItem>
             </MenuList>
           </Menu>
         ) : (
-          <Button bg="green.900" color="yellow.100" size="sm" onClick={onOpen}>
+          <Button
+            bg="yellow.100"
+            color="green.900"
+            _hover={{ bg: 'green.900', color: 'yellow.100', borderColor: 'yellow.100' }}
+            size="sm"
+            onClick={onOpen}
+          >
             Join or Sign in
           </Button>
         )}
