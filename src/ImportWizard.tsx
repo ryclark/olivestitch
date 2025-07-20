@@ -391,7 +391,7 @@ export default function ImportWizard({
             <Flex
               justify='space-between'
               mb={2}
-              display={{ base: 'flex', md: 'none' }}
+              display='flex'
               position='sticky'
               top={0}
               bg='white'
@@ -449,7 +449,7 @@ export default function ImportWizard({
                 {fabricCount} × {fabricCount} = {fabricCount * fabricCount} stitches per square inch
               </Text>
             </Box>
-            <Flex justify='space-between' display={{ base: 'none', md: 'flex' }}>
+            <Flex justify='space-between' display='none'>
               <Button mr={2} onClick={onCancel}>Cancel</Button>
               <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
             </Flex>
@@ -461,7 +461,7 @@ export default function ImportWizard({
             <Flex
               justify='space-between'
               mb={2}
-              display={{ base: 'flex', md: 'none' }}
+              display='flex'
               position='sticky'
               top={0}
               bg='white'
@@ -546,7 +546,7 @@ export default function ImportWizard({
                 />
               </Box>
             </Box>
-            <Flex justify='space-between' mt={4} display={{ base: 'none', md: 'flex' }}>
+            <Flex justify='space-between' mt={4} display='none'>
               <Button onClick={prevStep}>Back</Button>
               <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
             </Flex>
@@ -558,7 +558,7 @@ export default function ImportWizard({
             <Flex
               justify='space-between'
               mb={2}
-              display={{ base: 'flex', md: 'none' }}
+              display='flex'
               position='sticky'
               top={0}
               bg='white'
@@ -625,7 +625,7 @@ export default function ImportWizard({
             <Text fontSize='sm' mt={2} textAlign='center'>
               Drag the image so the part inside the grid looks right. Only what you see here will turn into stitches.
             </Text>
-            <Flex justify='space-between' mt={4} display={{ base: 'none', md: 'flex' }}>
+            <Flex justify='space-between' mt={4} display='none'>
               <Button onClick={prevStep}>Back</Button>
               <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
             </Flex>
@@ -637,7 +637,7 @@ export default function ImportWizard({
             <Flex
               justify='space-between'
               mb={2}
-              display={{ base: 'flex', md: 'none' }}
+              display='flex'
               position='sticky'
               top={0}
               bg='white'
@@ -716,7 +716,7 @@ export default function ImportWizard({
                 </Slider>
               </FormControl>
             </Box>
-            <Flex justify='space-between' mt={4} display={{ base: 'none', md: 'flex' }}>
+            <Flex justify='space-between' mt={4} display='none'>
               <Button onClick={prevStep}>Back</Button>
               <Button bg='green.900' color='yellow.100' onClick={handleNext}>Next</Button>
             </Flex>
