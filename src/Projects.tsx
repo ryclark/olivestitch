@@ -17,7 +17,8 @@ import {
   PopoverCloseButton,
   PopoverBody,
   IconButton,
-  Heading
+  Heading,
+  Flex
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthenticator } from '@aws-amplify/ui-react';
@@ -169,9 +170,14 @@ export default function Projects() {
         ref={fileInputRef}
         onChange={e => handleImageUpload(e.target.files ? e.target.files[0] : null)}
       />
-      <Button mb={4} bg="green.900" color="yellow.100" onClick={openFileDialog}>
-        New Project
-      </Button>
+      <Flex mb={4} alignItems="center">
+        <Heading size="md" mr={2} flex="1">
+          Your Projects
+        </Heading>
+        <Button bg="green.900" color="yellow.100" onClick={openFileDialog}>
+          New Project
+        </Button>
+      </Flex>
       {importImage && (
         <ImportWizard
           img={importImage}
@@ -183,10 +189,10 @@ export default function Projects() {
         <Thead>
           <Tr>
             <Th>Pattern</Th>
-            <Th>Reference Image</Th>
-            <Th>Creation Date</Th>
-            <Th>Est. Total Hours</Th>
-            <Th>Progress</Th>
+            <Th className="projects-reference-column">Reference Image</Th>
+            <Th className="projects-created-column">Creation Date</Th>
+            <Th className="projects-esthours-column">Est. Total Hours</Th>
+            <Th className="projects-progress-column">Progress</Th>
             <Th></Th>
           </Tr>
         </Thead>
@@ -229,11 +235,11 @@ export default function Projects() {
                 <Td>
                   <Image src={p.gridImage} alt="pattern" boxSize="80px" objectFit="cover" />
                 </Td>
-                <Td>
+                <Td className="projects-reference-column">
                   <Image src={p.image} alt="reference" boxSize="80px" objectFit="cover" />
                 </Td>
-                <Td>{created}</Td>
-                <Td>{est} 
+                <Td className="projects-created-column">{created}</Td>
+                <Td className="projects-esthours-column">{est}
                   <Popover placement="right">
                           <PopoverTrigger>
                             <IconButton
@@ -268,7 +274,7 @@ export default function Projects() {
                           </PopoverContent>
                         </Popover>
                 </Td>
-                <Td>
+                <Td className="projects-progress-column">
                   {progressText}
                   <Box fontSize="sm" mt={1} color="gray.600">
                     Time Remaining: {remainingEst}
@@ -317,10 +323,10 @@ export default function Projects() {
             <Thead>
               <Tr>
                 <Th>Pattern</Th>
-                <Th>Reference Image</Th>
-                <Th>Creation Date</Th>
-                <Th>Est. Total Hours</Th>
-                <Th>Progress</Th>
+                <Th className="projects-reference-column">Reference Image</Th>
+                <Th className="projects-created-column">Creation Date</Th>
+                <Th className="projects-esthours-column">Est. Total Hours</Th>
+                <Th className="projects-progress-column">Progress</Th>
                 <Th></Th>
               </Tr>
             </Thead>
@@ -363,11 +369,11 @@ export default function Projects() {
                     <Td>
                       <Image src={p.gridImage} alt="pattern" boxSize="80px" objectFit="cover" />
                     </Td>
-                    <Td>
+                    <Td className="projects-reference-column">
                       <Image src={p.image} alt="reference" boxSize="80px" objectFit="cover" />
                     </Td>
-                    <Td>{created}</Td>
-                    <Td>{est}
+                    <Td className="projects-created-column">{created}</Td>
+                    <Td className="projects-esthours-column">{est}
                       <Popover placement="right">
                           <PopoverTrigger>
                             <IconButton
@@ -402,7 +408,7 @@ export default function Projects() {
                           </PopoverContent>
                         </Popover>
                     </Td>
-                    <Td>
+                    <Td className="projects-progress-column">
                       {progressText}
                       <Box fontSize="sm" mt={1} color="gray.600">
                         Time Remaining: {remainingEst}
@@ -418,7 +424,7 @@ export default function Projects() {
                           navigate('/deep-dive', { state: { pattern, progress: p.progress, id: p.id } })
                         }
                       >
-                        Continue
+                        Revisit
                       </Button>
                       <Button
                         size="sm"
