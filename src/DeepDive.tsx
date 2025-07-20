@@ -43,14 +43,11 @@ export default function DeepDive() {
   const cols = grid[0]?.length || 0;
   const BORDER = 4;
   const cellSize = Math.floor((maxGridPx - BORDER) / Math.max(rows, cols));
-  const gridWidth = cellSize * cols + BORDER;
   const gridHeight = cellSize * rows + BORDER;
   const inchPx = cellSize * fabricCount;
   const inchCols = Math.ceil(cols / fabricCount);
   const inchRows = Math.ceil(rows / fabricCount);
   const subMaxPx = 300;
-  const subCellSize = Math.floor((subMaxPx - BORDER) / fabricCount);
-  const subGridWidth = subCellSize * fabricCount + BORDER;
 
   const overlays = [];
   for (let y = 0; y < inchRows; y++) {
