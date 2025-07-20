@@ -154,6 +154,7 @@ export default function App() {
         <Footer />
       </Box>
     );
+  }
 
   if (location.pathname === "/my-account") {
     return (
