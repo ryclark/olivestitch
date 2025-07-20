@@ -161,23 +161,12 @@ export default function DeepDive() {
       <Button mb={4} onClick={() => navigate(-1)} bg="green.900" color="yellow.100">
         Back
       </Button>
-      <FormControl display="flex" alignItems="center" mb={4} width="fit-content">
-        <FormLabel htmlFor="symbol-toggle" mb="0">
-          Symbols
-        </FormLabel>
-        <Switch
-          id="symbol-toggle"
-          isChecked={showSymbols}
-          onChange={e => setShowSymbols(e.target.checked)}
-        />
-      </FormControl>
       <ChakraGrid
         gap={4}
-        templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+        templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }}
         templateAreas={{
-          base: '"large" "section" "colors"',
-          md: '"large section" "large colors"',
-          lg: '"large section colors"',
+          base: '"large" "section" "actions"',
+          md: '"large section" "large actions"',
         }}
         alignItems="flex-start"
       >
@@ -236,10 +225,20 @@ export default function DeepDive() {
                 }}
               />
             </Box>
-            <Box gridArea="colors" mt={2} w="100%">
+            <Box gridArea="actions" mt={2} w="100%">
               <Heading size="md" mb={2}>
                 Details & Actions
               </Heading>
+              <FormControl display="flex" alignItems="center" mb={2} width="fit-content">
+                <FormLabel htmlFor="symbol-toggle" mb="0">
+                  Symbols
+                </FormLabel>
+                <Switch
+                  id="symbol-toggle"
+                  isChecked={showSymbols}
+                  onChange={e => setShowSymbols(e.target.checked)}
+                />
+              </FormControl>
               <UsedColors
                 colors={Object.keys(colorUsage)}
                 usage={colorUsage}
