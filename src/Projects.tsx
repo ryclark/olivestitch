@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
 import {
   Box,
   Button,
@@ -23,19 +23,18 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  useBreakpointValue
-} from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import { useAuthenticator } from '@aws-amplify/ui-react';
-import { generateClient } from 'aws-amplify/data';
-import { getUrl, remove } from '@aws-amplify/storage';
-import type { Schema } from '../amplify/data/resource';
-import ImportWizard from './ImportWizard';
-import type { PatternDetails } from './types';
-import { saveProject } from './utils';
-import { estimateTimeRange } from './timeEstimator';
-import { FiInfo, FiTrash2, FiChevronDown } from 'react-icons/fi';
-
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import { generateClient } from "aws-amplify/data";
+import { getUrl, remove } from "@aws-amplify/storage";
+import type { Schema } from "../amplify/data/resource";
+import ImportWizard from "./ImportWizard";
+import type { PatternDetails } from "./types";
+import { saveProject } from "./utils";
+import { estimateTimeRange } from "./timeEstimator";
+import { FiInfo, FiTrash2, FiChevronDown } from "react-icons/fi";
 
 const client = generateClient<Schema>();
 
@@ -54,6 +53,7 @@ interface ProjectActionsProps {
   continueLabel: string;
   onContinue: () => void;
   onShoppingList: () => void;
+  onPathfinder: () => void;
   onDelete: () => void;
 }
 
@@ -61,7 +61,8 @@ function ProjectActions({
   continueLabel,
   onContinue,
   onShoppingList,
-  onDelete
+  onPathfinder,
+  onDelete,
 }: ProjectActionsProps) {
   const useMenu = useBreakpointValue({ base: true, md: true });
 
@@ -80,6 +81,7 @@ function ProjectActions({
         <MenuList>
           <MenuItem onClick={onContinue}>{continueLabel}</MenuItem>
           <MenuItem onClick={onShoppingList}>Shopping List</MenuItem>
+          <MenuItem onClick={onPathfinder}>Pathfinder</MenuItem>
           <MenuItem icon={<FiTrash2 />} onClick={onDelete}>
             Delete
           </MenuItem>
@@ -108,6 +110,15 @@ function ProjectActions({
       >
         Shopping List
       </Button>
+      <Button
+        size="sm"
+        bg="green.900"
+        color="yellow.100"
+        mr={2}
+        onClick={onPathfinder}
+      >
+        Pathfinder
+      </Button>
       <Button size="sm" colorScheme="red" onClick={onDelete}>
         <FiTrash2 />
       </Button>
@@ -116,7 +127,7 @@ function ProjectActions({
 }
 
 export default function Projects() {
-  const { user } = useAuthenticator(ctx => [ctx.user]);
+  const { user } = useAuthenticator((ctx) => [ctx.user]);
   const navigate = useNavigate();
   const [projects, setProjects] = useState<ProjectRecord[]>([]);
   const [importImage, setImportImage] = useState<HTMLImageElement | null>(null);
@@ -145,7 +156,7 @@ export default function Projects() {
           imageKey: p.image,
           gridKey: p.gridImage,
         };
-      })
+      }),
     );
     setProjects(records);
   };
@@ -160,10 +171,10 @@ export default function Projects() {
     if (!file) return;
     const img = new window.Image();
     const reader = new FileReader();
-    reader.onload = evt => {
+    reader.onload = (evt) => {
       img.onload = () => setImportImage(img);
       const result = evt.target?.result;
-      if (typeof result === 'string') {
+      if (typeof result === "string") {
         img.src = result;
       }
     };
@@ -177,9 +188,9 @@ export default function Projects() {
     await fetchProjects();
     setImportImage(null);
     setImportFile(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (fileInputRef.current) fileInputRef.current.value = "";
     if (data) {
-      navigate('/deep-dive', {
+      navigate("/deep-dive", {
         state: { pattern: details, progress: [], id: data.id },
       });
     }
@@ -188,7 +199,7 @@ export default function Projects() {
   const handleWizardCancel = () => {
     setImportImage(null);
     setImportFile(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const openFileDialog = () => {
@@ -196,7 +207,7 @@ export default function Projects() {
   };
 
   const deleteProject = async (p: ProjectRecord) => {
-    if (!window.confirm('Delete this project?')) return;
+    if (!window.confirm("Delete this project?")) return;
     await Promise.all([
       client.models.Project.delete({ id: p.id }),
       p.imageKey ? remove({ path: p.imageKey }) : Promise.resolve(),
@@ -205,10 +216,10 @@ export default function Projects() {
     fetchProjects();
   };
 
-  const openProjects = projects.filter(p => {
+  const openProjects = projects.filter((p) => {
     const pattern: PatternDetails = {
       confettiLevel: 1,
-      ...JSON.parse(p.pattern)
+      ...JSON.parse(p.pattern),
     };
     const totalSections =
       Math.ceil(pattern.grid.length / pattern.fabricCount) *
@@ -216,10 +227,10 @@ export default function Projects() {
     return p.progress.length < totalSections;
   });
 
-  const completedProjects = projects.filter(p => {
+  const completedProjects = projects.filter((p) => {
     const pattern: PatternDetails = {
       confettiLevel: 1,
-      ...JSON.parse(p.pattern)
+      ...JSON.parse(p.pattern),
     };
     const totalSections =
       Math.ceil(pattern.grid.length / pattern.fabricCount) *
@@ -238,7 +249,9 @@ export default function Projects() {
         accept="image/*"
         display="none"
         ref={fileInputRef}
-        onChange={e => handleImageUpload(e.target.files ? e.target.files[0] : null)}
+        onChange={(e) =>
+          handleImageUpload(e.target.files ? e.target.files[0] : null)
+        }
       />
       <Flex mb={4} alignItems="center">
         <Heading size="md" mr={2} flex="1">
@@ -267,21 +280,22 @@ export default function Projects() {
           </Tr>
         </Thead>
         <Tbody>
-          {openProjects.map(p => {
+          {openProjects.map((p) => {
             const pattern: PatternDetails = {
               confettiLevel: 1,
-              ...JSON.parse(p.pattern)
+              ...JSON.parse(p.pattern),
             };
-            const stitches = pattern.grid.length * (pattern.grid[0]?.length || 0);
+            const stitches =
+              pattern.grid.length * (pattern.grid[0]?.length || 0);
             const times = estimateTimeRange(
               stitches,
               pattern.colors.length,
-              pattern.confettiLevel ?? 1
+              pattern.confettiLevel ?? 1,
             );
             const est = `${times[4].toFixed(1)} hrs - ${times[0].toFixed(1)} hrs `;
             const created = p.createdAt
               ? new Date(p.createdAt).toLocaleDateString()
-              : '';
+              : "";
             const totalSections =
               Math.ceil(pattern.grid.length / pattern.fabricCount) *
               Math.ceil((pattern.grid[0]?.length || 0) / pattern.fabricCount);
@@ -290,59 +304,72 @@ export default function Projects() {
               ? Math.round((completedSections / totalSections) * 100)
               : 0;
             const progressText = `${percent}% (${completedSections} / ${totalSections} Sections Complete)`;
-            const remainingStitches =
-              Math.round(
-                stitches * (totalSections - completedSections) / totalSections
-              );
+            const remainingStitches = Math.round(
+              (stitches * (totalSections - completedSections)) / totalSections,
+            );
             const remainingTimes = estimateTimeRange(
               remainingStitches,
               pattern.colors.length,
-              pattern.confettiLevel ?? 1
+              pattern.confettiLevel ?? 1,
             );
             const remainingEst = `${remainingTimes[4].toFixed(1)} hrs - ${remainingTimes[0].toFixed(1)} hrs`;
             return (
               <Tr key={p.id}>
                 <Td>
-                  <Image src={p.gridImage} alt="pattern" boxSize="80px" objectFit="cover" />
+                  <Image
+                    src={p.gridImage}
+                    alt="pattern"
+                    boxSize="80px"
+                    objectFit="cover"
+                  />
                 </Td>
                 <Td className="projects-reference-column">
-                  <Image src={p.image} alt="reference" boxSize="80px" objectFit="cover" />
+                  <Image
+                    src={p.image}
+                    alt="reference"
+                    boxSize="80px"
+                    objectFit="cover"
+                  />
                 </Td>
                 <Td className="projects-created-column">{created}</Td>
-                <Td className="projects-esthours-column">{est}
+                <Td className="projects-esthours-column">
+                  {est}
                   <Popover placement="right">
-                          <PopoverTrigger>
-                            <IconButton
-                              aria-label="time-info"
-                              icon={<FiInfo />}
-                              variant="ghost"
-                              size="xs"
-                              ml={1}
-                            />
-                          </PopoverTrigger>
-                          <PopoverContent width="260px">
-                            <PopoverArrow />
-                            <PopoverCloseButton />
-                            <PopoverBody fontSize="sm">
-                               <Box fontSize="sm" mt={1}>
-                                  Beginner: {times[0].toFixed(1)} hrs
-                                  <br />
-                                  Level 2: {times[1].toFixed(1)} hrs
-                                  <br />
-                                  Level 3: {times[2].toFixed(1)} hrs
-                                  <br />
-                                  Level 4: {times[3].toFixed(1)} hrs
-                                  <br />
-                                  Expert: {times[4].toFixed(1)} hrs
-                                </Box>
-                              <Box fontSize="sm" mt={1}> Estimated time is based on total stitch count, number of floss colors
-                              (which affect thread changes), and a confetti level (how scattered the
-                              colors are). We provide a range based on the stitching speed depending on
-                              whether you're a beginner or advanced stitcher.
-                            </Box>
-                            </PopoverBody>
-                          </PopoverContent>
-                        </Popover>
+                    <PopoverTrigger>
+                      <IconButton
+                        aria-label="time-info"
+                        icon={<FiInfo />}
+                        variant="ghost"
+                        size="xs"
+                        ml={1}
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent width="260px">
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverBody fontSize="sm">
+                        <Box fontSize="sm" mt={1}>
+                          Beginner: {times[0].toFixed(1)} hrs
+                          <br />
+                          Level 2: {times[1].toFixed(1)} hrs
+                          <br />
+                          Level 3: {times[2].toFixed(1)} hrs
+                          <br />
+                          Level 4: {times[3].toFixed(1)} hrs
+                          <br />
+                          Expert: {times[4].toFixed(1)} hrs
+                        </Box>
+                        <Box fontSize="sm" mt={1}>
+                          {" "}
+                          Estimated time is based on total stitch count, number
+                          of floss colors (which affect thread changes), and a
+                          confetti level (how scattered the colors are). We
+                          provide a range based on the stitching speed depending
+                          on whether you're a beginner or advanced stitcher.
+                        </Box>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
                 </Td>
                 <Td className="projects-progress-column">
                   {progressText}
@@ -354,12 +381,15 @@ export default function Projects() {
                   <ProjectActions
                     continueLabel="Continue"
                     onContinue={() =>
-                      navigate('/deep-dive', {
-                        state: { pattern, progress: p.progress, id: p.id }
+                      navigate("/deep-dive", {
+                        state: { pattern, progress: p.progress, id: p.id },
                       })
                     }
                     onShoppingList={() =>
-                      navigate('/shopping-list', { state: { pattern } })
+                      navigate("/shopping-list", { state: { pattern } })
+                    }
+                    onPathfinder={() =>
+                      navigate("/pathfinder", { state: { pattern } })
                     }
                     onDelete={() => deleteProject(p)}
                   />
@@ -371,7 +401,9 @@ export default function Projects() {
       </Table>
       {completedProjects.length > 0 && (
         <>
-          <Heading size="md" mt={8} mb={2}>Completed</Heading>
+          <Heading size="md" mt={8} mb={2}>
+            Completed
+          </Heading>
           <Table variant="simple">
             <Thead>
               <Tr>
@@ -384,82 +416,100 @@ export default function Projects() {
               </Tr>
             </Thead>
             <Tbody>
-              {completedProjects.map(p => {
+              {completedProjects.map((p) => {
                 const pattern: PatternDetails = {
                   confettiLevel: 1,
-                  ...JSON.parse(p.pattern)
+                  ...JSON.parse(p.pattern),
                 };
-                const stitches = pattern.grid.length * (pattern.grid[0]?.length || 0);
+                const stitches =
+                  pattern.grid.length * (pattern.grid[0]?.length || 0);
                 const times = estimateTimeRange(
                   stitches,
                   pattern.colors.length,
-                  pattern.confettiLevel ?? 1
+                  pattern.confettiLevel ?? 1,
                 );
                 const est = `${times[4].toFixed(1)} hrs - ${times[0].toFixed(1)} hrs`;
                 const created = p.createdAt
                   ? new Date(p.createdAt).toLocaleDateString()
-                  : '';
+                  : "";
                 const totalSections =
                   Math.ceil(pattern.grid.length / pattern.fabricCount) *
-                  Math.ceil((pattern.grid[0]?.length || 0) / pattern.fabricCount);
+                  Math.ceil(
+                    (pattern.grid[0]?.length || 0) / pattern.fabricCount,
+                  );
                 const completedSections = p.progress.length;
                 const percent = totalSections
                   ? Math.round((completedSections / totalSections) * 100)
                   : 0;
                 const progressText = `${percent}% (${completedSections} / ${totalSections} Sections Complete)`;
-                const remainingStitches =
-                  Math.round(
-                    stitches * (totalSections - completedSections) / totalSections
-                  );
+                const remainingStitches = Math.round(
+                  (stitches * (totalSections - completedSections)) /
+                    totalSections,
+                );
                 const remainingTimes = estimateTimeRange(
                   remainingStitches,
                   pattern.colors.length,
-                  pattern.confettiLevel ?? 1
+                  pattern.confettiLevel ?? 1,
                 );
                 const remainingEst = `${remainingTimes[4].toFixed(1)} hrs - ${remainingTimes[0].toFixed(1)} hrs`;
                 return (
                   <Tr key={p.id}>
                     <Td>
-                      <Image src={p.gridImage} alt="pattern" boxSize="80px" objectFit="cover" />
+                      <Image
+                        src={p.gridImage}
+                        alt="pattern"
+                        boxSize="80px"
+                        objectFit="cover"
+                      />
                     </Td>
                     <Td className="projects-reference-column">
-                      <Image src={p.image} alt="reference" boxSize="80px" objectFit="cover" />
+                      <Image
+                        src={p.image}
+                        alt="reference"
+                        boxSize="80px"
+                        objectFit="cover"
+                      />
                     </Td>
                     <Td className="projects-created-column">{created}</Td>
-                    <Td className="projects-esthours-column">{est}
+                    <Td className="projects-esthours-column">
+                      {est}
                       <Popover placement="right">
-                          <PopoverTrigger>
-                            <IconButton
-                              aria-label="time-info"
-                              icon={<FiInfo />}
-                              variant="ghost"
-                              size="xs"
-                              ml={1}
-                            />
-                          </PopoverTrigger>
-                          <PopoverContent width="260px">
-                            <PopoverArrow />
-                            <PopoverCloseButton />
-                            <PopoverBody fontSize="sm">
-                               <Box fontSize="sm" mt={1}>
-                                  Beginner: {times[0].toFixed(1)} hrs
-                                  <br />
-                                  Level 2: {times[1].toFixed(1)} hrs
-                                  <br />
-                                  Level 3: {times[2].toFixed(1)} hrs
-                                  <br />
-                                  Level 4: {times[3].toFixed(1)} hrs
-                                  <br />
-                                  Expert: {times[4].toFixed(1)} hrs
-                                </Box>
-                              <Box fontSize="sm" mt={1}> Estimated time is based on total stitch count, number of floss colors
-                              (which affect thread changes), and a confetti level (how scattered the
-                              colors are). We provide a range based on the stitching speed depending on
-                              whether you're a beginner or advanced stitcher.
+                        <PopoverTrigger>
+                          <IconButton
+                            aria-label="time-info"
+                            icon={<FiInfo />}
+                            variant="ghost"
+                            size="xs"
+                            ml={1}
+                          />
+                        </PopoverTrigger>
+                        <PopoverContent width="260px">
+                          <PopoverArrow />
+                          <PopoverCloseButton />
+                          <PopoverBody fontSize="sm">
+                            <Box fontSize="sm" mt={1}>
+                              Beginner: {times[0].toFixed(1)} hrs
+                              <br />
+                              Level 2: {times[1].toFixed(1)} hrs
+                              <br />
+                              Level 3: {times[2].toFixed(1)} hrs
+                              <br />
+                              Level 4: {times[3].toFixed(1)} hrs
+                              <br />
+                              Expert: {times[4].toFixed(1)} hrs
                             </Box>
-                            </PopoverBody>
-                          </PopoverContent>
-                        </Popover>
+                            <Box fontSize="sm" mt={1}>
+                              {" "}
+                              Estimated time is based on total stitch count,
+                              number of floss colors (which affect thread
+                              changes), and a confetti level (how scattered the
+                              colors are). We provide a range based on the
+                              stitching speed depending on whether you're a
+                              beginner or advanced stitcher.
+                            </Box>
+                          </PopoverBody>
+                        </PopoverContent>
+                      </Popover>
                     </Td>
                     <Td className="projects-progress-column">
                       {progressText}
@@ -467,16 +517,19 @@ export default function Projects() {
                         Time Remaining: {remainingEst}
                       </Box>
                     </Td>
-                      <Td>
-                        <ProjectActions
-                          continueLabel="Revisit"
-                          onContinue={() =>
-                            navigate('/deep-dive', {
-                              state: { pattern, progress: p.progress, id: p.id }
-                            })
-                          }
+                    <Td>
+                      <ProjectActions
+                        continueLabel="Revisit"
+                        onContinue={() =>
+                          navigate("/deep-dive", {
+                            state: { pattern, progress: p.progress, id: p.id },
+                          })
+                        }
                         onShoppingList={() =>
-                          navigate('/shopping-list', { state: { pattern } })
+                          navigate("/shopping-list", { state: { pattern } })
+                        }
+                        onPathfinder={() =>
+                          navigate("/pathfinder", { state: { pattern } })
                         }
                         onDelete={() => deleteProject(p)}
                       />

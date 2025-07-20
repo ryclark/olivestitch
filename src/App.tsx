@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef } from "react";
 import {
   Box,
   Button,
@@ -22,27 +22,28 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   PopoverBody,
-  IconButton
-} from '@chakra-ui/react';
+  IconButton,
+} from "@chakra-ui/react";
 import { FiInfo } from "react-icons/fi";
-import GridMagnifier from './GridMagnifier';
-import UsedColors from './UsedColors';
-import ImportWizard from './ImportWizard';
-import Header from './Header';
-import Footer from './Footer';
-import DeepDive from './DeepDive';
-import Projects from './Projects';
-import FlossBox from './FlossBox';
+import GridMagnifier from "./GridMagnifier";
+import UsedColors from "./UsedColors";
+import ImportWizard from "./ImportWizard";
+import Header from "./Header";
+import Footer from "./Footer";
+import DeepDive from "./DeepDive";
+import Projects from "./Projects";
+import FlossBox from "./FlossBox";
 import MyAccount from "./MyAccount";
-import ShoppingList from './ShoppingList';
-import { useNavigate, useLocation } from 'react-router-dom';
-import sample1 from './images/samples/dancer.png';
-import sample2 from './images/samples/baloons.png';
-import sample3 from './images/samples/rain.png';
+import ShoppingList from "./ShoppingList";
+import Pathfinder from "./Pathfinder";
+import { useNavigate, useLocation } from "react-router-dom";
+import sample1 from "./images/samples/dancer.png";
+import sample2 from "./images/samples/baloons.png";
+import sample3 from "./images/samples/rain.png";
 
-import type { PatternDetails } from './types';
-import { saveProject } from './utils';
-import { estimateTimeRange } from './timeEstimator';
+import type { PatternDetails } from "./types";
+import { saveProject } from "./utils";
+import { estimateTimeRange } from "./timeEstimator";
 
 export default function App() {
   const [importImage, setImportImage] = useState<HTMLImageElement | null>(null);
@@ -59,10 +60,10 @@ export default function App() {
     if (!file) return;
     const img = new window.Image();
     const reader = new FileReader();
-    reader.onload = evt => {
+    reader.onload = (evt) => {
       img.onload = () => setImportImage(img);
       const result = evt.target?.result;
-      if (typeof result === 'string') {
+      if (typeof result === "string") {
         img.src = result;
       }
     };
@@ -79,9 +80,9 @@ export default function App() {
     setShowGridLines(false);
     setImportImage(null);
     setImportFile(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (fileInputRef.current) fileInputRef.current.value = "";
     if (data) {
-      navigate('/deep-dive', {
+      navigate("/deep-dive", {
         state: { pattern: details, progress: [], id: data.id },
       });
     }
@@ -90,19 +91,19 @@ export default function App() {
   const handleWizardCancel = () => {
     setImportImage(null);
     setImportFile(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleSelectSample = (src: string) => {
     const img = new window.Image();
     img.onload = () => {
       const size = Math.min(img.width, img.height);
-      const canvas = document.createElement('canvas');
+      const canvas = document.createElement("canvas");
       canvas.width = size;
       canvas.height = size;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    ctx.drawImage(
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.drawImage(
         img,
         (img.width - size) / 2,
         (img.height - size) / 2,
@@ -111,7 +112,7 @@ export default function App() {
         0,
         0,
         size,
-        size
+        size,
       );
       const cropped = new window.Image();
       cropped.onload = () => setImportImage(cropped);
@@ -128,11 +129,11 @@ export default function App() {
 
   const handleDeepDive = () => {
     if (pattern) {
-      navigate('/deep-dive', { state: { pattern } });
+      navigate("/deep-dive", { state: { pattern } });
     }
   };
 
-  if (location.pathname === '/projects') {
+  if (location.pathname === "/projects") {
     return (
       <Box minH="100vh" minW="100vw" display="flex" flexDirection="column">
         <Header />
@@ -144,7 +145,7 @@ export default function App() {
     );
   }
 
-  if (location.pathname === '/floss-box') {
+  if (location.pathname === "/floss-box") {
     return (
       <Box minH="100vh" minW="100vw" display="flex" flexDirection="column">
         <Header />
@@ -168,7 +169,7 @@ export default function App() {
     );
   }
 
-  if (location.pathname === '/deep-dive') {
+  if (location.pathname === "/deep-dive") {
     return (
       <Box minH="100vh" minW="100vw" display="flex" flexDirection="column">
         <Header />
@@ -180,7 +181,19 @@ export default function App() {
     );
   }
 
-  if (location.pathname === '/shopping-list') {
+  if (location.pathname === "/pathfinder") {
+    return (
+      <Box minH="100vh" minW="100vw" display="flex" flexDirection="column">
+        <Header />
+        <Box flex="1">
+          <Pathfinder />
+        </Box>
+        <Footer />
+      </Box>
+    );
+  }
+
+  if (location.pathname === "/shopping-list") {
     return (
       <Box minH="100vh" minW="100vw" display="flex" flexDirection="column">
         <Header />
@@ -209,7 +222,9 @@ export default function App() {
               accept="image/*"
               display="none"
               ref={fileInputRef}
-              onChange={e => handleImageUpload(e.target.files ? e.target.files[0] : null)}
+              onChange={(e) =>
+                handleImageUpload(e.target.files ? e.target.files[0] : null)
+              }
             />
             <Button
               size="lg"
@@ -241,14 +256,18 @@ export default function App() {
               <Switch
                 id="grid-toggle"
                 isChecked={showGridLines}
-                onChange={e => setShowGridLines(e.target.checked)}
+                onChange={(e) => setShowGridLines(e.target.checked)}
               />
             </FormControl>
             <Box mt={4}>
               <Button bg="green.900" color="yellow.100" mr={2} onClick={onOpen}>
                 Pattern Details
               </Button>
-              <Button bg="green.900" color="yellow.100" onClick={handleDeepDive}>
+              <Button
+                bg="green.900"
+                color="yellow.100"
+                onClick={handleDeepDive}
+              >
                 Deep Dive
               </Button>
             </Box>
@@ -327,15 +346,17 @@ export default function App() {
                 <strong>Fabric:</strong> {pattern.fabricCount}-count Aida
               </Box>
               <Box mb={4}>
-                <strong>Dimensions:</strong> {pattern.widthIn}&quot; x {pattern.heightIn}&quot;
+                <strong>Dimensions:</strong> {pattern.widthIn}&quot; x{" "}
+                {pattern.heightIn}&quot;
               </Box>
               <Box mb={4}>
                 {(() => {
-                  const stitches = pattern.grid.length * (pattern.grid[0]?.length || 0);
+                  const stitches =
+                    pattern.grid.length * (pattern.grid[0]?.length || 0);
                   const times = estimateTimeRange(
                     stitches,
                     pattern.colors.length,
-                    pattern.confettiLevel ?? 1
+                    pattern.confettiLevel ?? 1,
                   );
                   return (
                     <>
@@ -355,10 +376,12 @@ export default function App() {
                             <PopoverArrow />
                             <PopoverCloseButton />
                             <PopoverBody fontSize="sm">
-                              Estimated time is based on total stitch count, number of floss colors
-                              (which affect thread changes), and a confetti level (how scattered the
-                              colors are). We provide a range based on the stitching speed depending on
-                              whether you're a beginner or advanced stitcher.
+                              Estimated time is based on total stitch count,
+                              number of floss colors (which affect thread
+                              changes), and a confetti level (how scattered the
+                              colors are). We provide a range based on the
+                              stitching speed depending on whether you're a
+                              beginner or advanced stitcher.
                             </PopoverBody>
                           </PopoverContent>
                         </Popover>
