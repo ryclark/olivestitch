@@ -44,6 +44,7 @@ export default function DeepDive() {
   const BORDER = 4;
   const cellSize = Math.floor((maxGridPx - BORDER) / Math.max(rows, cols));
   const gridHeight = cellSize * rows + BORDER;
+  const gridWidth = cellSize * cols + BORDER;
   const inchPx = cellSize * fabricCount;
   const inchCols = Math.ceil(cols / fabricCount);
   const inchRows = Math.ceil(rows / fabricCount);
@@ -174,7 +175,13 @@ export default function DeepDive() {
           <Heading size="md" mb={2}>
             Pattern Map
           </Heading>
-          <Box position="relative" height={gridHeight} flexShrink={0} overflow="hidden">
+          <Box
+            position="relative"
+            height={gridHeight}
+            width={gridWidth}
+            flexShrink={0}
+            overflow="hidden"
+          >
             <StitchGrid
               grid={grid}
               setGrid={() => {}}
@@ -185,15 +192,15 @@ export default function DeepDive() {
               symbolMap={pattern.symbols}
               showSymbols={false}
             />
-            <Box position="absolute" top={0} left={0} right={0} bottom={0}>
+            <Box position="absolute" top={2} left={2} right={2} bottom={2}>
               {overlays}
             </Box>
             {active && (
               <Box
                 pointerEvents="none"
                 position="absolute"
-                left={active.x * inchPx}
-                top={active.y * inchPx}
+                left={active.x * inchPx + 2}
+                top={active.y * inchPx + 2}
                 width={active.w}
                 height={active.h}
                 boxShadow="0 0 0 9999px rgba(0,0,0,0.5)"
