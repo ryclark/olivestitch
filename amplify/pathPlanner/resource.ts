@@ -16,6 +16,8 @@ export const pathPlanner: ConstructFactory<PathPlannerInstance> = {
   getInstance: (props) => {
     const instance = base.getInstance(props);
     instance.resources.lambda.addFunctionUrl({ authType: FunctionUrlAuthType.NONE });
+    // Expose the function URL via amplify_outputs.json for frontend use
+    props.outputs.functionUrl = instance.resources.lambda.functionUrl!.url;
     return instance;
   },
 };
