@@ -10,7 +10,7 @@ export const pathPlanner: ConstructFactory<PathPlannerInstance> = {
   getInstance: (props) => {
     const instance = base.getInstance(props);
     const fnUrl = instance.resources.lambda.addFunctionUrl({
-      authType: FunctionUrlAuthType.NONE,
+      authType: FunctionUrlAuthType.AWS_IAM,
       cors: {
         allowedOrigins: ['*'],
         allowedMethods: ['GET', 'POST', 'OPTIONS'] as unknown as HttpMethod[],
