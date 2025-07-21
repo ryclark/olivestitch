@@ -11,6 +11,11 @@ export const pathPlanner: ConstructFactory<PathPlannerInstance> = {
     const instance = base.getInstance(props);
     const fnUrl = instance.resources.lambda.addFunctionUrl({
       authType: FunctionUrlAuthType.NONE,
+      cors: {
+        allowedOrigins: ['*'],
+        allowedMethods: ['GET', 'POST', 'OPTIONS'],
+        allowedHeaders: ['*'],
+      },
     });
     props.outputStorageStrategy.addBackendOutputEntry('pathPlanner', {
       version: '1',
