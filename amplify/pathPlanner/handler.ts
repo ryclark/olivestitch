@@ -89,9 +89,17 @@ export const handler = async (event: { body?: string }) => {
     const maxStitches = body.max_stitches ?? body.maxStitches ?? 150;
     const maxJump = body.max_jump ?? body.maxJump ?? 5;
     const result = planStitchingSegments(grid, maxStitches, maxJump);
-    return { statusCode: 200, body: JSON.stringify(result) };
+    return {
+      statusCode: 200,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify(result),
+    };
   } catch (err) {
     const message = err instanceof Error ? err.message : 'unknown error';
-    return { statusCode: 500, body: JSON.stringify({ error: message }) };
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: message }),
+    };
   }
 };

@@ -7,7 +7,10 @@ import outputs from '../amplify_outputs.json';
 
 interface AmplifyOutputs {
   pathPlanner?: {
-    functionUrl: string;
+    version: string;
+    payload: {
+      functionUrl: string;
+    };
   };
   [key: string]: unknown;
 }
@@ -30,7 +33,7 @@ export default function Pathfinder() {
 
   const handleSubmit = async () => {
     if (!pattern) return;
-    const url = (outputs as AmplifyOutputs).pathPlanner?.functionUrl;
+    const url = (outputs as AmplifyOutputs).pathPlanner?.payload.functionUrl;
     if (!url) {
       console.error('pathPlanner functionUrl not defined');
       return;
