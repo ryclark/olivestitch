@@ -53,6 +53,13 @@
               "isRequired": false,
               "attributes": []
             },
+            "gridImage": {
+              "name": "gridImage",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
             "pattern": {
               "name": "pattern",
               "isArray": false,
@@ -190,11 +197,26 @@
       "nonModels": {}
     }
   },
-  "pathPlanner": {
-    "version": "1",
-    "payload": {
-      "functionUrl": "https://example.com"
-    }
+  "storage": {
+    "aws_region": "us-east-1",
+    "bucket_name": "amplify-d1tkjve3zvpwm2-ma-olivestoragebucketd52919-osmm5cf8m40s",
+    "buckets": [
+      {
+        "name": "olivestorage",
+        "bucket_name": "amplify-d1tkjve3zvpwm2-ma-olivestoragebucketd52919-osmm5cf8m40s",
+        "aws_region": "us-east-1",
+        "paths": {
+          "customer-images/${cognito-identity.amazonaws.com:sub}/*": {
+            "entityidentity": [
+              "get",
+              "list",
+              "write",
+              "delete"
+            ]
+          }
+        }
+      }
+    ]
   },
   "version": "1.3"
 }
