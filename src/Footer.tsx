@@ -36,20 +36,12 @@ export default function Footer() {
     align={{ base: "flex-start", md: "center" }}
     px={{ base: 4, md: 8 }} // <-- This creates horizontal padding
   >
-    {/* Left: Brand Info */}
-    <Box mb={{ base: 4, md: 0 }}>
-      <Text fontSize="sm">
-        <Text as="span" fontWeight="bold">Made with 🧵 and ❤️ in Seattle</Text> <Text as="span" mx={4}>
-    •
-  </Text>  © {new Date().getFullYear()} Olive Industries. All rights reserved. 
-      </Text>
-    </Box>
-
-    {/* Right: Navigation + Social */}
+    {/* Left: Navigation + Social */}
     <Stack
       direction={{ base: "column", sm: "row" }}
       spacing={{ base: 2, sm: 6 }}
       align="center"
+      mb={{ base: 4, md: 0 }}
     >
       <Link href="/about" _hover={{ textDecoration: "underline" }}>
         About
@@ -71,10 +63,22 @@ export default function Footer() {
         <Link href="https://pinterest.com/yourhandle" isExternal>
           <Icon as={FaPinterest} boxSize={5} />
         </Link>
-<Link href="https://reddit.com/yourhandle" isExternal>
-  <Icon as={FaReddit} boxSize={5} />
-</Link>
+        <Link href="https://reddit.com/yourhandle" isExternal>
+          <Icon as={FaReddit} boxSize={5} />
+        </Link>
       </HStack>
+    </Stack>
+
+    {/* Right: Brand Info */}
+    <Stack
+      direction={{ base: "column", sm: "row" }}
+      spacing={{ base: 0, sm: 2 }}
+      align={{ base: "flex-start", sm: "center" }}
+      textAlign={{ base: "left", sm: "right" }}
+    >
+      <Text fontSize="sm" fontWeight="bold">Made with 🧵 and ❤️ in Seattle</Text>
+      <Text display={{ base: "none", sm: "inline" }} mx={1}>•</Text>
+      <Text fontSize="sm">© {new Date().getFullYear()} Olive Industries. All rights reserved.</Text>
     </Stack>
   </Flex>
   <Drawer placement="right" size="lg" onClose={closeTerms} isOpen={isTermsOpen}>
