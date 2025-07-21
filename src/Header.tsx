@@ -67,8 +67,7 @@ export default function Header() {
               _focus={{ boxShadow: 'none', bg: 'yellow.100' }}
               size="sm"
               mr={2}
-              icon={<FiUser fontSize="1.2rem" />}
-              name={user.username}
+              icon={<FiUser fontSize="2rem" />}
             />
             <MenuList bg="yellow.100" color="green.900" borderColor="green.900">
               <MenuItem
