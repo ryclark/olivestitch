@@ -1,5 +1,5 @@
 import { defineFunction } from '@aws-amplify/backend';
-import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
+import { FunctionUrlAuthType, HttpMethod } from 'aws-cdk-lib/aws-lambda';
 import type { ConstructFactory } from '@aws-amplify/plugin-types';
 
 const base = defineFunction();
@@ -13,7 +13,7 @@ export const pathPlanner: ConstructFactory<PathPlannerInstance> = {
       authType: FunctionUrlAuthType.NONE,
       cors: {
         allowedOrigins: ['*'],
-        allowedMethods: ['GET', 'POST', 'OPTIONS'],
+        allowedMethods: [HttpMethod.GET, HttpMethod.POST, HttpMethod.OPTIONS],
         allowedHeaders: ['*'],
       },
     });
