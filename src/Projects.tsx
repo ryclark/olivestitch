@@ -36,6 +36,8 @@ import { saveProject } from "./utils";
 import { estimateTimeRange } from "./timeEstimator";
 import { FiInfo, FiTrash2, FiChevronDown } from "react-icons/fi";
 
+const SECTION_HEADER_HEIGHT = 48; // px
+
 const client = generateClient<Schema>();
 
 interface ProjectRecord {
@@ -253,23 +255,43 @@ export default function Projects() {
           handleImageUpload(e.target.files ? e.target.files[0] : null)
         }
       />
-      <Flex mb={4} alignItems="center">
-        <Heading size="md" mr={2} flex="1">
-          Your Projects
-        </Heading>
-        <Button bg="green.900" color="yellow.100" onClick={openFileDialog}>
-          New Project
-        </Button>
-      </Flex>
-      {importImage && (
-        <ImportWizard
-          img={importImage}
-          onCancel={handleWizardCancel}
-          onComplete={handleWizardComplete}
-        />
-      )}
-      <Table variant="simple">
-        <Thead>
+      <Box mb={8}>
+        <Flex
+          bg="green.900"
+          color="yellow.100"
+          px={4}
+          py={2}
+          position="sticky"
+          top={0}
+          zIndex={2}
+          alignItems="center"
+        >
+          <Heading size="md" mr={2} flex="1">
+            Your Projects
+          </Heading>
+          <Button
+            size="sm"
+            bg="yellow.100"
+            color="green.900"
+            onClick={openFileDialog}
+          >
+            New Project
+          </Button>
+        </Flex>
+        {importImage && (
+          <ImportWizard
+            img={importImage}
+            onCancel={handleWizardCancel}
+            onComplete={handleWizardComplete}
+          />
+        )}
+        <Table variant="simple">
+          <Thead
+            position="sticky"
+            top={`${SECTION_HEADER_HEIGHT}px`}
+            zIndex={1}
+            bg="yellow.50"
+          >
           <Tr>
             <Th>Pattern</Th>
             <Th className="projects-reference-column">Reference Image</Th>
@@ -399,13 +421,27 @@ export default function Projects() {
           })}
         </Tbody>
       </Table>
+      </Box>
       {completedProjects.length > 0 && (
-        <>
-          <Heading size="md" mt={8} mb={2}>
-            Completed
-          </Heading>
+        <Box mb={8}>
+          <Box
+            bg="green.900"
+            color="yellow.100"
+            px={4}
+            py={2}
+            position="sticky"
+            top={0}
+            zIndex={2}
+          >
+            <Heading size="md">Completed</Heading>
+          </Box>
           <Table variant="simple">
-            <Thead>
+            <Thead
+              position="sticky"
+              top={`${SECTION_HEADER_HEIGHT}px`}
+              zIndex={1}
+              bg="yellow.50"
+            >
               <Tr>
                 <Th>Pattern</Th>
                 <Th className="projects-reference-column">Reference Image</Th>
@@ -539,7 +575,7 @@ export default function Projects() {
               })}
             </Tbody>
           </Table>
-        </>
+        </Box>
       )}
     </Box>
   );
