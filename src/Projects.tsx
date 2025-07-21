@@ -36,8 +36,8 @@ import { saveProject } from "./utils";
 import { estimateTimeRange } from "./timeEstimator";
 import { FiInfo, FiTrash2, FiChevronDown } from "react-icons/fi";
 
-const SECTION_HEADER_HEIGHT = 48; // px
-const PAGE_HEADER_HEIGHT = 66;
+//const SECTION_HEADER_HEIGHT = 48; // px
+//const PAGE_HEADER_HEIGHT = 66;
 
 
 const client = generateClient<Schema>();
