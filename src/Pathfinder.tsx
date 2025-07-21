@@ -5,6 +5,13 @@ import Grid from './Grid';
 import type { PatternDetails } from './types';
 import outputs from '../amplify_outputs.json';
 
+interface AmplifyOutputs {
+  pathPlanner?: {
+    functionUrl: string;
+  };
+  [key: string]: unknown;
+}
+
 interface Segment {
   color: string;
   path: [number, number][];
@@ -23,7 +30,10 @@ export default function Pathfinder() {
 
   const handleSubmit = async () => {
     if (!pattern) return;
-    const url = (outputs as any).pathPlanner?.functionUrl;
+    const url = (outputs as AmplifyOutputs).pathPlanner?.functionUrl;
+    if (!url) {
+      throw new Error('pathPlanner functionUrl not defined');
+    }
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
