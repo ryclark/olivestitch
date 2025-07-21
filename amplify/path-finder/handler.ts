@@ -1,5 +1,3 @@
-import { APIGatewayProxyEvent } from 'aws-lambda';
-
-export const handler = async (event: APIGatewayProxyEvent) => {
+export const handler = async () => {
   return "Hello from my first function!";
 };
