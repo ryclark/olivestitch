@@ -190,5 +190,11 @@
       "nonModels": {}
     }
   },
+  "pathPlanner": {
+    "version": "1",
+    "payload": {
+      "functionUrl": "https://example.com"
+    }
+  },
   "version": "1.3"
 }
