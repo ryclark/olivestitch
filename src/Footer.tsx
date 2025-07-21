@@ -32,8 +32,8 @@ export default function Footer() {
     <Box as="footer" bg="green.900" color="yellow.100" py={4} mt={8}>
   <Flex
     direction={{ base: "column", md: "row" }}
-    justify="space-between"
-    align={{ base: "flex-start", md: "center" }}
+    justify={{ base: "center", md: "space-between" }}
+    align="center"
     px={{ base: 4, md: 8 }} // <-- This creates horizontal padding
   >
     {/* Left: Navigation + Social */}
@@ -73,8 +73,8 @@ export default function Footer() {
     <Stack
       direction={{ base: "column", sm: "row" }}
       spacing={{ base: 0, sm: 2 }}
-      align={{ base: "flex-start", sm: "center" }}
-      textAlign={{ base: "left", sm: "right" }}
+      align={{ base: "center", sm: "center" }}
+      textAlign={{ base: "center", sm: "right" }}
     >
       <Text fontSize="sm" fontWeight="bold">Made with 🧵 and ❤️ in Seattle</Text>
       <Text display={{ base: "none", sm: "inline" }} mx={1}>•</Text>
