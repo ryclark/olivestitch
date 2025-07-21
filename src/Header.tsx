@@ -5,6 +5,7 @@ import {
   Heading,
   Spacer,
   Button,
+  Avatar,
   Image,
   Modal,
   ModalOverlay,
@@ -59,16 +60,16 @@ export default function Header() {
         {user ? (
           <Menu>
             <MenuButton
-              as={Button}
+              as={Avatar}
               bg="yellow.100"
               color="green.900"
               _hover={{ bg: 'green.900', color: 'yellow.100', borderColor: 'yellow.100' }}
               _focus={{ boxShadow: 'none', bg: 'yellow.100' }}
               size="sm"
               mr={2}
-            >
-              <FiUser fontSize="1.2rem" />
-            </MenuButton>
+              icon={<FiUser fontSize="1.2rem" />}
+              name={user.username}
+            />
             <MenuList bg="yellow.100" color="green.900" borderColor="green.900">
               <MenuItem
                 bg="yellow.100"
