@@ -32,7 +32,8 @@ export default function Pathfinder() {
     if (!pattern) return;
     const url = (outputs as AmplifyOutputs).pathPlanner?.functionUrl;
     if (!url) {
-      throw new Error('pathPlanner functionUrl not defined');
+      console.error('pathPlanner functionUrl not defined');
+      return;
     }
     const res = await fetch(url, {
       method: 'POST',
