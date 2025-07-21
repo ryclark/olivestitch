@@ -1,9 +1,9 @@
 {
   "auth": {
-    "user_pool_id": "us-east-1_nnVRx2Tvd",
+    "user_pool_id": "us-east-1_B7t04vhVP",
     "aws_region": "us-east-1",
-    "user_pool_client_id": "58vannuklvdvkukak0kcnm13kb",
-    "identity_pool_id": "us-east-1:7a4213a5-f76e-487f-8b64-2d10006f4794",
+    "user_pool_client_id": "1pjhgo9p4u0djq4807jbjsre6b",
+    "identity_pool_id": "us-east-1:bffcb08b-be40-4ae8-b670-3040167f2c54",
     "mfa_methods": [],
     "standard_required_attributes": [
       "email"
@@ -25,9 +25,9 @@
     "unauthenticated_identities_enabled": true
   },
   "data": {
-    "url": "https://ttvbds5zvbax3p4piyegyq4yoq.appsync-api.us-east-1.amazonaws.com/graphql",
+    "url": "https://w6raykribnb2bhznx5a5hoofrm.appsync-api.us-east-1.amazonaws.com/graphql",
     "aws_region": "us-east-1",
-    "api_key": "da2-v6arqbwq6bemfibvtrsqfmo3qi",
+    "api_key": "da2-w6zrkaalvzcu5o6eqzfumrdfcu",
     "default_authorization_type": "AMAZON_COGNITO_USER_POOLS",
     "authorization_types": [
       "API_KEY",
@@ -199,11 +199,11 @@
   },
   "storage": {
     "aws_region": "us-east-1",
-    "bucket_name": "amplify-d1tkjve3zvpwm2-ma-olivestoragebucketd52919-osmm5cf8m40s",
+    "bucket_name": "amplify-amplifyvitereactt-olivestoragebucketd52919-gwih9uyiivpp",
     "buckets": [
       {
         "name": "olivestorage",
-        "bucket_name": "amplify-d1tkjve3zvpwm2-ma-olivestoragebucketd52919-osmm5cf8m40s",
+        "bucket_name": "amplify-amplifyvitereactt-olivestoragebucketd52919-gwih9uyiivpp",
         "aws_region": "us-east-1",
         "paths": {
           "customer-images/${cognito-identity.amazonaws.com:sub}/*": {
@@ -218,5 +218,5 @@
       }
     ]
   },
-  "version": "1.3"
+  "version": "1.2"
 }
