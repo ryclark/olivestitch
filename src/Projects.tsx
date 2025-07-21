@@ -37,6 +37,8 @@ import { estimateTimeRange } from "./timeEstimator";
 import { FiInfo, FiTrash2, FiChevronDown } from "react-icons/fi";
 
 const SECTION_HEADER_HEIGHT = 48; // px
+const PAGE_HEADER_HEIGHT = 66;
+
 
 const client = generateClient<Schema>();
 
@@ -262,9 +264,10 @@ export default function Projects() {
           px={4}
           py={2}
           position="sticky"
-          top={0}
           zIndex={2}
           alignItems="center"
+          top="66px"
+
         >
           <Heading size="md" mr={2} flex="1">
             Your Projects
@@ -288,7 +291,7 @@ export default function Projects() {
         <Table variant="simple">
           <Thead
             position="sticky"
-            top={`${SECTION_HEADER_HEIGHT}px`}
+            top="114px"//{`${PAGE_HEADER_HEIGHT + SECTION_HEADER_HEIGHT}px`}
             zIndex={1}
             bg="yellow.50"
           >
@@ -425,20 +428,22 @@ export default function Projects() {
       {completedProjects.length > 0 && (
         <Box mb={8}>
           <Box
-            bg="green.900"
-            color="yellow.100"
-            px={4}
-            py={2}
-            position="sticky"
-            top={0}
-            zIndex={2}
+             bg="green.900"
+          color="yellow.100"
+          px={4}
+          py={2}
+          position="sticky"
+          zIndex={2}
+          alignItems="center"
+          top="66px"
+
           >
             <Heading size="md">Completed</Heading>
           </Box>
           <Table variant="simple">
             <Thead
               position="sticky"
-              top={`${SECTION_HEADER_HEIGHT}px`}
+            top="100px"//{`${PAGE_HEADER_HEIGHT + SECTION_HEADER_HEIGHT}px`}
               zIndex={1}
               bg="yellow.50"
             >
