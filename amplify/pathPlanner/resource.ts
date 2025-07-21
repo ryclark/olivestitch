@@ -13,7 +13,7 @@ export const pathPlanner: ConstructFactory<PathPlannerInstance> = {
       authType: FunctionUrlAuthType.NONE,
       cors: {
         allowedOrigins: ['*'],
-        allowedMethods: [HttpMethod.GET, HttpMethod.POST, HttpMethod.OPTIONS],
+        allowedMethods: ['GET', 'POST', 'OPTIONS'] as unknown as HttpMethod[],
         allowedHeaders: ['*'],
       },
     });
