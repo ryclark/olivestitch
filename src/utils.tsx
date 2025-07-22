@@ -180,6 +180,91 @@ export function overlayShade(hex: string): string {
   return shadeColor(hex, brightness > 0.6 ? -0.4 : 0.4);
 }
 
+/**
+ * Apply a simple smoothing pass over the grid to reduce isolated stitches.
+ * A lower level results in more blending of neighboring colors.
+ * @param grid The original color grid
+ * @param level Confetti level from 1 (heavily blended) to 10 (no blending)
+ */
+export function applyConfettiLevel(grid: string[][], level: number): string[][] {
+  const passes = Math.max(0, 10 - level);
+  if (passes === 0) return grid;
+  let result = grid.map(r => r.slice());
+  const h = result.length;
+  const w = result[0]?.length || 0;
+
+  for (let p = 0; p < passes; p++) {
+    const copy = result.map(r => r.slice());
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const counts: Record<string, number> = {};
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            const ny = y + dy;
+            const nx = x + dx;
+            if (ny < 0 || ny >= h || nx < 0 || nx >= w) continue;
+            const c = result[ny][nx];
+            counts[c] = (counts[c] || 0) + 1;
+          }
+        }
+        let best = result[y][x];
+        let bestCount = counts[best];
+        for (const c in counts) {
+          if (counts[c] > bestCount) {
+            best = c;
+            bestCount = counts[c];
+          }
+        }
+        if (best !== result[y][x] && bestCount >= 5) {
+          copy[y][x] = best;
+        }
+      }
+    }
+    result = copy;
+  }
+
+  return result;
+}
+
+/**
+ * Calculate a normalized Confetti Level Score (1-100) for a grid.
+ * @param grid Grid of stitch colors/symbols
+ */
+export function calculateConfettiScore(grid: string[][]): number {
+  const blockSize = 10;
+  const minCLS = 2;
+  const maxCLS = 22;
+  const rows = grid.length;
+  const cols = grid[0]?.length || 0;
+  if (rows === 0 || cols === 0) return 1;
+
+  const rawScores: number[] = [];
+  for (let y = 0; y < rows; y += blockSize) {
+    for (let x = 0; x < cols; x += blockSize) {
+      const counts: Record<string, number> = {};
+      let uniques = new Set<string>();
+      for (let j = 0; j < blockSize; j++) {
+        for (let i = 0; i < blockSize; i++) {
+          const ny = y + j;
+          const nx = x + i;
+          if (ny >= rows || nx >= cols) continue;
+          const c = grid[ny][nx];
+          uniques.add(c);
+          counts[c] = (counts[c] || 0) + 1;
+        }
+      }
+      const confettiStitches = Object.values(counts).filter(v => v === 1).length;
+      const raw = (uniques.size + confettiStitches) / 2;
+      rawScores.push(raw);
+    }
+  }
+
+  const avgRaw = rawScores.reduce((a, b) => a + b, 0) / rawScores.length;
+  const normalized =
+    1 + (99 * (avgRaw - minCLS)) / (maxCLS - minCLS);
+  return Math.round(normalized * 10) / 10;
+}
+
 // Generate a small data URL thumbnail from a File or data URL string
 export async function createThumbnail(
   image: string | File,

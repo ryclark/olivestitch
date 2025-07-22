@@ -33,7 +33,7 @@ import {
 
 const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
 import Grid from './Grid';
-import { findClosestDmcColor, getColorUsage, reduceColors, generateSymbolMap } from './utils';
+import { findClosestDmcColor, getColorUsage, reduceColors, generateSymbolMap, applyConfettiLevel, calculateConfettiScore } from './utils';
 import Collapsible from './Collapsible';
 import UsedColors from './UsedColors';
 import ColorPalette, { DMC_COLORS } from './ColorPalette';
@@ -132,6 +132,10 @@ export default function ImportWizard({
   const [showMine, setShowMine] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [confetti, setConfetti] = useState<number>(1);
+  const confettiScore = useMemo(
+    () => (preview ? calculateConfettiScore(preview) : null),
+    [preview]
+  );
   
   useEffect(() => {
     if (!user) return;
@@ -154,7 +158,8 @@ export default function ImportWizard({
     setMaxColors(count);
     const val = Math.min(reduceTo, count);
     setReduceTo(val);
-    setPreview(reduceColors(g, val));
+    const reduced = reduceColors(g, val);
+    setPreview(applyConfettiLevel(reduced, confetti));
   }, [showMine]);
   /* eslint-enable react-hooks/exhaustive-deps */
 
@@ -287,7 +292,7 @@ export default function ImportWizard({
       const count = Object.keys(getColorUsage(g)).length;
       setMaxColors(count);
       setReduceTo(count);
-      setPreview(g);
+      setPreview(applyConfettiLevel(g, confetti));
     }
     if (step === 3) {
       // proceed to done
@@ -311,7 +316,20 @@ export default function ImportWizard({
 
   const handleReduceChange = (val: number) => {
     setReduceTo(val);
-    setPreview(grid ? reduceColors(grid, val) : null);
+    if (grid) {
+      const reduced = reduceColors(grid, val);
+      setPreview(applyConfettiLevel(reduced, confetti));
+    } else {
+      setPreview(null);
+    }
+  };
+
+  const handleConfettiChange = (val: number) => {
+    setConfetti(val);
+    if (grid) {
+      const reduced = reduceColors(grid, reduceTo);
+      setPreview(applyConfettiLevel(reduced, val));
+    }
   };
 
   const steps = [
@@ -730,7 +748,9 @@ export default function ImportWizard({
                 />
               </Collapsible>
               <FormControl mt={4} textAlign='center'>
-                <FormLabel textAlign='center'>Confetti Level: {confetti}</FormLabel>
+                <FormLabel textAlign='center'>
+                  Confetti Level: {confetti} {confettiScore !== null && `| Score: ${confettiScore}`}
+                </FormLabel>
                 <Slider
                   size='lg'
                   width={`${sliderWidth}px`}
@@ -739,7 +759,7 @@ export default function ImportWizard({
                   max={10}
                   step={1}
                   value={confetti}
-                  onChange={setConfetti}
+                  onChange={handleConfettiChange}
                 >
                   <SliderTrack>
                     <SliderFilledTrack />
