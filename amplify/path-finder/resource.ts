@@ -1,6 +1,6 @@
 import { defineFunction } from "@aws-amplify/backend";
 
-export const myFirstFunction = defineFunction({
+export const pathFinder = defineFunction({
   name: "path-finder",
   entry: "./handler.ts"
 });
