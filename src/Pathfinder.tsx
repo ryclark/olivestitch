@@ -47,7 +47,7 @@ export default function Pathfinder() {
 
   const handleSubmit = async () => {
     if (!pattern) return;
-    const res = await fetch('/path-finder', {
+    const res = await fetch('/pathFinder', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ grid: pattern.grid, max_stitches: maxStitches, max_jump: maxJump })
