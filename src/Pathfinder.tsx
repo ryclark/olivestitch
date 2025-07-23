@@ -9,6 +9,6 @@ const client = generateClient<Schema>()
 export default function Pathfinder() {
   return <Box p={4}>Pathfinder placeholder.</Box>;
 }
-client.queries.Pathfinder({
+client.queries.pathFinder({
   name: "Amplify",
 })
