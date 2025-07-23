@@ -13,10 +13,21 @@ export default function Pathfinder() {
   useEffect(() => {
     async function fetchPath() {
       try {
+
         const response = await client.queries.pathFinder({ name: "Amplify" });
-        setResult(response.data);
-      } catch (err) {
+
+        // Full logging for visibility
+        console.log("Full response from pathFinder:", response);
+
+        if (response?.data) {
+          setResult(response.data);
+        } else {
+          setResult("No data returned.");
+        }
+
+      } catch (err: any) {
         console.error("pathFinder error:", err);
+        setResult("Error occurred");
       }
     }
 
