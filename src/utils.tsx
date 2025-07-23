@@ -242,7 +242,7 @@ export function calculateConfettiScore(grid: string[][]): number {
   for (let y = 0; y < rows; y += blockSize) {
     for (let x = 0; x < cols; x += blockSize) {
       const counts: Record<string, number> = {};
-      let uniques = new Set<string>();
+      const uniques = new Set<string>();
       for (let j = 0; j < blockSize; j++) {
         for (let i = 0; i < blockSize; i++) {
           const ny = y + j;
