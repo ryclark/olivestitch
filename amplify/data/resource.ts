@@ -9,12 +9,21 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
-  pathFinder: a
+   pathFinder: a
     .query()
     .arguments({
-      name: a.string(),
+      grid: a.array(a.array(a.string())),
+      max_stitches: a.optional(a.int()), // optional
+      max_jump: a.optional(a.int()),     // optional
     })
-    .returns(a.string())
+    .returns(
+      a.array(
+        a.object({
+          color: a.string(),
+          path: a.array(a.tuple([a.int(), a.int()])),
+        })
+      )
+    )
     .authorization(allow => [allow.authenticated()])
     .handler(a.handler.function(pathFinder)),
   Project: a
