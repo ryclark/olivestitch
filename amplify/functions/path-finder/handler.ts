@@ -1,5 +1,6 @@
 import type { Schema } from "../../data/resource";
-import { generateClient } from "@aws-amplify/backend";
+import { generateClient } from 'aws-amplify/data';
+
 
 type Coord = [number, number];
 
