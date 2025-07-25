@@ -25,6 +25,17 @@ const schema = a.schema({
       progress: a.string().array(),
     })
     .authorization(allow => [allow.owner()]),
+  Path: a
+    .model({
+      projectID: a.id().required(),
+      segmentID: a.string().required(), 
+      color: a.string(),
+      pathXs: a.integer().array(),
+      pathYs: a.integer().array(),
+    })
+    .authorization(allow => [allow.owner()]),
+
+
   Floss: a
     .model({
       code: a.string(),

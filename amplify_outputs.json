@@ -75,6 +75,15 @@
               "attributes": [],
               "isArrayNullable": true
             },
+            "paths": {
+              "name": "paths",
+              "isArray": false,
+              "type": {
+                "nonModel": "ProjectPaths"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
             "createdAt": {
               "name": "createdAt",
               "isArray": false,
@@ -194,7 +203,36 @@
         }
       },
       "enums": {},
-      "nonModels": {},
+      "nonModels": {
+        "ProjectPaths": {
+          "name": "ProjectPaths",
+          "fields": {
+            "color": {
+              "name": "color",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "pathXs": {
+              "name": "pathXs",
+              "isArray": true,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true
+            },
+            "pathYs": {
+              "name": "pathYs",
+              "isArray": true,
+              "type": "Int",
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true
+            }
+          }
+        }
+      },
       "queries": {
         "pathFinder": {
           "name": "pathFinder",
