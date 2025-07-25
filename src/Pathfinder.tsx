@@ -55,11 +55,13 @@ export default function Pathfinder() {
   return (
     <Box p={4}>
       {pattern && (
-        <Text>
+        <Text >
           {`There are ${pattern.grid.length} rows and ${pattern.grid[0].length} columns.`}
         </Text>
       )}
-      <Text>Pathfinder result: {result ?? "Loading..."}</Text>
+      <Text style={{ fontFamily: 'monospace' }}>
+        {`Pathfinder result:\n${result}`}
+      </Text>
     </Box>
   );
 }

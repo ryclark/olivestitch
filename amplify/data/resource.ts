@@ -34,7 +34,7 @@ const schema = a.schema({
       pathXs: a.integer().array(),
       pathYs: a.integer().array(),
     })
-    .authorization(allow => [allow.owner()]),
+    .authorization(allow => [allow.authenticated()]),
 
 
   Floss: a
