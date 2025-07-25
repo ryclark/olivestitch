@@ -12,6 +12,7 @@ const schema = a.schema({
   pathFinder: a
     .query()
     .arguments({
+      projectID: a.string(),
       grid: a.string().array().array(),
     })
     .returns(a.string())

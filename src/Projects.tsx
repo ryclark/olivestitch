@@ -414,7 +414,7 @@ export default function Projects() {
                       navigate("/shopping-list", { state: { pattern } })
                     }
                     onPathfinder={() =>
-                      navigate("/pathfinder", { state: { pattern } })
+                      navigate("/pathfinder", { state: { pattern, id: p.id } })
                     }
                     onDelete={() => deleteProject(p)}
                   />
@@ -570,7 +570,7 @@ export default function Projects() {
                           navigate("/shopping-list", { state: { pattern } })
                         }
                         onPathfinder={() =>
-                          navigate("/pathfinder", { state: { pattern } })
+                          navigate("/pathfinder", { state: { pattern, id: p.id } })
                         }
                         onDelete={() => deleteProject(p)}
                       />
