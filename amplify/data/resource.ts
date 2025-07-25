@@ -12,7 +12,7 @@ const schema = a.schema({
   pathFinder: a
     .query()
     .arguments({
-      name: a.string(),
+      grid: a.string().array().array(),
     })
     .returns(a.string())
     .authorization(allow => [allow.authenticated()])

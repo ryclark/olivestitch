@@ -2,19 +2,30 @@
 
 import { Box, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { generateClient } from "aws-amplify/api";
 import type { Schema } from "../amplify/data/resource";
+import type { PatternDetails } from "./types";
 
 const client = generateClient<Schema>();
 
+interface LocationState {
+  pattern?: PatternDetails;
+}
+
 export default function Pathfinder() {
+  const location = useLocation();
+  const { pattern } = (location.state as LocationState) || {};
   const [result, setResult] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchPath() {
+      if (!pattern) {
+        setResult("No pattern selected.");
+        return;
+      }
       try {
-
-        const response = await client.queries.pathFinder({ name: "Amplify" });
+        const response = await client.queries.pathFinder({ grid: pattern.grid });
 
         // Full logging for visibility
         console.log("Full response from pathFinder:", response);
@@ -24,15 +35,14 @@ export default function Pathfinder() {
         } else {
           setResult("No data returned.");
         }
-
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("pathFinder error:", err);
         setResult("Error occurred");
       }
     }
 
     fetchPath();
-  }, []);
+  }, [pattern]);
 
   return (
     <Box p={4}>
