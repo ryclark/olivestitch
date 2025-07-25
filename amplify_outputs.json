@@ -299,11 +299,12 @@
           "type": "String",
           "isRequired": false,
           "arguments": {
-            "name": {
-              "name": "name",
-              "isArray": false,
+            "grid": {
+              "name": "grid",
+              "isArray": true,
               "type": "String",
-              "isRequired": false
+              "isRequired": false,
+              "isArrayNullable": true
             }
           }
         }

@@ -13,10 +13,21 @@ interface LocationState {
   pattern?: PatternDetails;
 }
 
+
+function isStringGrid(value: unknown): value is string[][] {
+  return Array.isArray(value) &&
+    value.every(row =>
+      Array.isArray(row) &&
+      row.every(cell => typeof cell === "string")
+    );
+}
+
 export default function Pathfinder() {
   const location = useLocation();
   const { pattern } = (location.state as LocationState) || {};
   const [result, setResult] = useState<string | null>(null);
+
+
 
   useEffect(() => {
     async function fetchPath() {
@@ -46,6 +57,7 @@ export default function Pathfinder() {
 
   return (
     <Box p={4}>
+      <Text>`There are {pattern.grid.length} rows and {pattern.grid[0].length} columns.`;</Text>
       <Text>Pathfinder result: {result ?? "Loading..."}</Text>
     </Box>
   );

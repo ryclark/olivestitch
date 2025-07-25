@@ -3,19 +3,18 @@ import type { Schema } from "../../data/resource";
 export const handler: Schema["pathFinder"]["functionHandler"] = async (event) => {
   const { grid } = event.arguments;
 
-  if (!grid) {
-    throw new Error("Missing 'grid' argument");
+if (!grid) {
+    return "Missing 'grid' argument";
   }
 
-  const parsed = grid.map(row => {
-    if (!row) {
-      throw new Error("Grid contains a null or undefined row");
+  for (let i = 0; i < grid.length; i++) {
+    if (grid[i] == null) {
+      return `Grid contains a null or undefined row at index ${i}`;
     }
-    return row.map(Number);
-  });
+  }
 
-  const rows = parsed.length;
-  const cols = parsed[0]?.length ?? 0;
+  const rows = grid.length;
+  const cols = grid[0]?.length ?? 0;
 
   return `There are ${rows} rows and ${cols} columns.`;
-}
+};
