@@ -11,20 +11,14 @@ const client = generateClient<Schema>();
 
 interface LocationState {
   pattern?: PatternDetails;
+  id?: string;
 }
 
 
-function isStringGrid(value: unknown): value is string[][] {
-  return Array.isArray(value) &&
-    value.every(row =>
-      Array.isArray(row) &&
-      row.every(cell => typeof cell === "string")
-    );
-}
 
 export default function Pathfinder() {
   const location = useLocation();
-  const { pattern } = (location.state as LocationState) || {};
+  const { pattern, id } = (location.state as LocationState) || {};
   const [result, setResult] = useState<string | null>(null);
 
 
@@ -36,7 +30,10 @@ export default function Pathfinder() {
         return;
       }
       try {
-        const response = await client.queries.pathFinder({ grid: pattern.grid });
+        const response = await client.queries.pathFinder({
+          grid: pattern.grid,
+          projectID: id ?? "",
+        });
 
         // Full logging for visibility
         console.log("Full response from pathFinder:", response);
@@ -57,7 +54,11 @@ export default function Pathfinder() {
 
   return (
     <Box p={4}>
-      <Text>`There are {pattern.grid.length} rows and {pattern.grid[0].length} columns.`;</Text>
+      {pattern && (
+        <Text>
+          {`There are ${pattern.grid.length} rows and ${pattern.grid[0].length} columns.`}
+        </Text>
+      )}
       <Text>Pathfinder result: {result ?? "Loading..."}</Text>
     </Box>
   );
