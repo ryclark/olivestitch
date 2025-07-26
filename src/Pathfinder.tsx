@@ -14,12 +14,22 @@ interface LocationState {
   id?: string;
 }
 
+interface PathRecord {
+  id: string;
+  projectID: string;
+  segmentID: string;
+  color?: string | null;
+  pathXs?: number[] | null;
+  pathYs?: number[] | null;
+}
+
 
 
 export default function Pathfinder() {
   const location = useLocation();
   const { pattern, id } = (location.state as LocationState) || {};
   const [result, setResult] = useState<string | null>(null);
+  const [segment, setSegment] = useState<PathRecord | null>(null);
 
 
 
@@ -40,6 +50,14 @@ export default function Pathfinder() {
 
         if (response?.data) {
           setResult(response.data);
+          if (id) {
+            const { data } = await client.models.Path.list({
+              filter: { projectID: { eq: id } },
+              limit: 1,
+            });
+            const first = (data as PathRecord[])[0];
+            setSegment(first ?? null);
+          }
         } else {
           setResult("No data returned.");
         }
@@ -59,9 +77,20 @@ export default function Pathfinder() {
           {`There are ${pattern.grid.length} rows and ${pattern.grid[0].length} columns.`}
         </Text>
       )}
-      <Text style={{ fontFamily: 'monospace' }}>
+      <Text style={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
         {`Pathfinder result:\n${result}`}
       </Text>
+      {segment && (
+        <Box mt={4} fontFamily="monospace" whiteSpace="pre-wrap">
+          {`Segment ${segment.segmentID}\nColor: ${segment.color ?? 'N/A'}\nPath: ${
+            segment.pathXs && segment.pathYs
+              ? segment.pathXs
+                  .map((x, idx) => `(${x},${segment.pathYs?.[idx]})`)
+                  .join(' \u2192 ')
+              : 'None'
+          }`}
+        </Box>
+      )}
     </Box>
   );
 }
