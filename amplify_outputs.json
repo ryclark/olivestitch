@@ -201,12 +201,11 @@
               "properties": {
                 "rules": [
                   {
-                    "allow": "private",
+                    "allow": "public",
+                    "provider": "apiKey",
                     "operations": [
-                      "create",
-                      "update",
-                      "delete",
-                      "read"
+                      "read",
+                      "create"
                     ]
                   }
                 ]

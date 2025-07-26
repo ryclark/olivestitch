@@ -138,9 +138,9 @@ const output = segments.map((seg, i) => {
   return `Segment ${i + 1}:\nColor: ${seg.color}\nPath: ${pathStr}`;
 }).join("\n\n");
 
-return output;
+//return output;
 
-/*
+
 
 try {
   const firstSegment = segments[0];
@@ -170,8 +170,7 @@ try {
       : JSON.stringify(err);
   return `Error saving first segment: ${errorMessage}`;
 }
-
-
+/*
 
 try {
   const results = await Promise.allSettled(

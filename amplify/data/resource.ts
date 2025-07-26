@@ -34,7 +34,7 @@ const schema = a.schema({
       pathXs: a.integer().array(),
       pathYs: a.integer().array(),
     })
-    .authorization(allow => [allow.authenticated()]),
+    .authorization(allow => [allow.owner()]),
 
 
   Floss: a
@@ -42,7 +42,9 @@ const schema = a.schema({
       code: a.string(),
     })
     .authorization(allow => [allow.owner()]),
-});
+}).authorization(allow => [
+    allow.resource(pathFinder).to(['query', 'mutate'])
+  ]); // allow query and mutate operations 
 
 export type Schema = ClientSchema<typeof schema>;
 
