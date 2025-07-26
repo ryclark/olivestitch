@@ -7,7 +7,8 @@ import { generateClient } from "aws-amplify/api";
 import type { Schema } from "../amplify/data/resource";
 import type { PatternDetails } from "./types";
 
-const client = generateClient<Schema>();
+// Use explicit auth mode so requests include the user's JWT
+const client = generateClient<Schema>({ authMode: 'userPool' });
 
 interface LocationState {
   pattern?: PatternDetails;
