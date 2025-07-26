@@ -50,7 +50,7 @@ export default function Pathfinder() {
     }
 
     fetchPath();
-  }, [pattern]);
+  }, [pattern, id]);
 
   return (
     <Box p={4}>

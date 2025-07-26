@@ -81,7 +81,8 @@ function planSegments(
   return segments;
 }
 
-const client = generateClient<Schema>();
+// Use IAM auth within the Lambda function so it can access the Data API
+const client = generateClient<Schema>({ authMode: "iam" });
 
 export const handler: Schema["pathFinder"]["functionHandler"] = async (event) => {
   const {
@@ -121,24 +122,26 @@ export const handler: Schema["pathFinder"]["functionHandler"] = async (event) =>
 
       return cleaned;
     });
-  } catch (err: any) {
-    return `Failed to parse grid: ${err.message}`;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return `Failed to parse grid: ${message}`;
   }
 
   // ✅ Run segmentation
   let segments: { color: string; path: Coord[] }[];
   try {
     segments = planSegments(parsedGrid, max_stitches, max_jump);
-  } catch (e: any) {
-    return `Error in planSegments: ${e?.message ?? e}`;
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    return `Error in planSegments: ${message}`;
   }
 
-const output = segments.map((seg, i) => {
-  const pathStr = seg.path.map(([r, c]) => `(${r},${c})`).join(" → ");
-  return `Segment ${i + 1}:\nColor: ${seg.color}\nPath: ${pathStr}`;
-}).join("\n\n");
-
-//return output;
+  // Uncomment the following lines for debugging path segments
+  // const output = segments.map((seg, i) => {
+  //   const pathStr = seg.path.map(([r, c]) => `(${r},${c})`).join(" → ");
+  //   return `Segment ${i + 1}:\nColor: ${seg.color}\nPath: ${pathStr}`;
+  // }).join("\n\n");
+  // return output;
 
 
 
@@ -150,7 +153,7 @@ try {
   }
 
   const pathXs = firstSegment.path.map(([r]) => r);
-  const pathYs = firstSegment.path.map(([_, c]) => c);
+  const pathYs = firstSegment.path.map(([ , c]) => c);
 
   await client.models.Path.create({
     projectID,
@@ -181,7 +184,7 @@ try {
         }
 
         const pathXs = seg.path.map(([r]) => r);
-        const pathYs = seg.path.map(([_, c]) => c);
+        const pathYs = seg.path.map(([ , c]) => c);
 
         return await client.models.Path.create({
           projectID,
